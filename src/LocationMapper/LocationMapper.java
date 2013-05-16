@@ -1,18 +1,25 @@
+package LocationMapper;
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import org.joda.time.DateTime;
+
+import LatLongParser.LatLongParser;
+import TextParser.TextParser;
 
 
 public class LocationMapper 
 {
+	public static String workDir = "";
 	public static String logDir = "";
 	public static String dataDir = "";
 	
 	public DateTime startDateTime;;
 
-	SQLConnection sqlConnection;
+	public SQLConnection sqlConnection;
+	
+	
+	public LatLongParser latLongParser;
+	public TextParser textParser;
 	
 	
 	public LocationMapper(String[] args)
@@ -70,7 +77,7 @@ public class LocationMapper
 		Log.log(Log.breakString);
 		
 		
-		
+		//test connection to server
 		sqlConnection = new SQLConnection(address, tableName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
 		if(this.sqlConnection.Connect() == false)
 		{
@@ -82,16 +89,38 @@ public class LocationMapper
 		
 		
 		
+		//load textParser
+		
+		
+		//load LatLongParser
+		latLongParser = new LatLongParser();
+		latLongParser.loadData(dataDir);
+		
+		//get data from server
+		
+		
+		
+		
+		
+		
+		
 		Exit(0);
 	}
 	
 	
-	
+	public String makeNice(String string)
+	{
+		
+		
+		
+		
+		return string;
+	}
 	
 	
 	public void Exit(int status)
 	{
-		Log.saveLog(logDir, "log.log", false);
+		Log.saveLog(logDir, "log_" + new DateTime().toString().replaceAll(":", ".") + ".log", false);
 		System.exit(status);
 	}
 	

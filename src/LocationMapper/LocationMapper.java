@@ -11,7 +11,7 @@ public class LocationMapper
 {
 	public static String workDir = "";
 	public static String logDir = "";
-	public static String dataDir = "";
+	public static String dataDir = "data";
 	
 	public DateTime startDateTime;;
 

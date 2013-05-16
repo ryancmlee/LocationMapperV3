@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import LocationMapper.*;
+
 import diewald_shapeFile.files.shp.shapeTypes.ShpPolygon;
 
 
@@ -91,7 +93,7 @@ public class Area implements Serializable
 	    }
 		catch (Exception e)
 		{
-			LocationMapper.log("ERROR in compressPartsAndPoints:" + e);
+			Log.log("ERROR in compressPartsAndPoints:" + e);
 		}
     	
     	return data;
@@ -111,7 +113,7 @@ public class Area implements Serializable
     	}
     	catch (Exception e)
     	{
-    		LocationMapper.log("ERROR in unCompressPartsAndPoints:" + e);
+    		Log.log("ERROR in unCompressPartsAndPoints:" + e);
     	}
     	
     	

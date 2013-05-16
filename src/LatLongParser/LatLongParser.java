@@ -5,7 +5,10 @@ import java.util.HashMap;
 
 
 import LocationMapper.*;
+import diewald_shapeFile.files.dbf.DBF_File;
+import diewald_shapeFile.files.shp.SHP_File;
 import diewald_shapeFile.files.shp.shapeTypes.ShpPolygon;
+import diewald_shapeFile.files.shx.SHX_File;
 import diewald_shapeFile.shapeFile.ShapeFile;
 
 
@@ -31,10 +34,24 @@ public class LatLongParser
 	
 	public boolean loadData(String dataDir)
 	{
+		SHP_File.LOG_INFO = false;
+		SHP_File.LOG_ONLOAD_HEADER = false;
+		SHP_File.LOG_ONLOAD_CONTENT = false;
+		
+		SHX_File.LOG_INFO = false;
+		SHX_File.LOG_ONLOAD_HEADER = false;
+		SHX_File.LOG_ONLOAD_CONTENT = false;
+		
+		DBF_File.LOG_INFO = false;
+		DBF_File.LOG_ONLOAD_HEADER = false;
+		DBF_File.LOG_ONLOAD_CONTENT = false;
+		
+		
 		Log.log("Loading Shapefiles...");
 		Log.log(Log.tab + "Loading countires");
 		try
 		{
+		
 			ShapeFile countriesShapeFile = new ShapeFile(dataDir, "TM_WORLD_BORDERS-0.3").READ();
 	    	for(int i = 0; i < countriesShapeFile.getDBF_recordCount(); i++)
 	    	{

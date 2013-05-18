@@ -24,6 +24,8 @@ public class LocationMapper
 	
 	public LocationMapper(String[] args)
 	{
+		Log.doConsolePrint = true;
+		
 		String address = null;
 		String tableName = null;
 		String port = null;
@@ -59,7 +61,7 @@ public class LocationMapper
 			Log.log("port = args[2]");
 			Log.log("userName = args[3]");
 			Log.log("password = args[4");
-			Log.log("pdataDir = args[5] - OPTIONAL defualt = " + dataDir);
+			Log.log("dataDir = args[5] - OPTIONAL defualt = " + dataDir);
 
 			Log.log("Exiting...");
 			Exit(1);
@@ -78,18 +80,25 @@ public class LocationMapper
 		
 		
 		//test connection to server
-		sqlConnection = new SQLConnection(address, tableName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
-		if(this.sqlConnection.Connect() == false)
-		{
-			Log.log("Unable to connecto to sql server");
-			Log.log("Exiting");
-			Exit(1);
-			return;
-		}
-		
+//		sqlConnection = new SQLConnection(address, tableName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
+//		if(this.sqlConnection.Connect() == false)
+//		{
+//			Log.log("Unable to connecto to sql server");
+//			Log.log("Exiting");
+//			Exit(1);
+//			return;
+//		}
+//		
 		
 		
 		//load textParser
+		textParser = new TextParser();
+		textParser.loadText(dataDir);
+		textParser.doProcessing(dataDir);
+		
+		
+		
+		
 		
 		
 		//load LatLongParser

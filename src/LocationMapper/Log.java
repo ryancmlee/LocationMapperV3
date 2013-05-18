@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.Period;
 
 
 public class Log 
@@ -21,10 +22,20 @@ public class Log
 	
 	public static void log(String data)
 	{
+		log(data, false);
+	}
+	public static void log(String data, boolean doError)
+	{
 		String out = "<" + new DateTime() + "> " + data;
 		
 		if(doConsolePrint)
-			System.out.println(out);
+		{
+			if(doError)
+				System.err.println(out);
+			else
+				System.out.println(out);
+		}
+			
 		
 		log += out + "\r\n";
 	}
@@ -47,8 +58,10 @@ public class Log
 	
 	public static boolean saveLog(String directory, String name, boolean doAppend)
 	{
-		Interval interval = new Interval(startTime, new DateTime());
-		String totalRunTime = interval.toString();
+		Period period = new Period(startTime, new DateTime());
+		String totalRunTime = period.toString();
+		
+
 		
 		String saveLoc;
 		if(directory == null || directory.equals(""))

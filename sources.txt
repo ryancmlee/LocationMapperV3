@@ -9,3 +9,4 @@
 ./src/TextParser/Part.java
 ./src/TextParser/Location.java
 ./src/TextParser/TextParser.java
+./src/EntryPoint.java

@@ -1,0 +1,11 @@
+./src/LatLongParser/Area.java
+./src/LatLongParser/Column.java
+./src/LatLongParser/LatLongParser.java
+./src/LocationMapper/LocationMapper.java
+./src/LocationMapper/SQLConnection.java
+./src/LocationMapper/Record.java
+./src/LocationMapper/Log.java
+./src/TextParser/PartManager.java
+./src/TextParser/Part.java
+./src/TextParser/Location.java
+./src/TextParser/TextParser.java

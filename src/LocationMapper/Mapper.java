@@ -14,7 +14,7 @@ import TextParser.PartManager;
 import TextParser.TextParser;
 
 
-public class LocationMapper 
+public class Mapper 
 {
 	public static String workDir = "";
 	public static String logDir = "";
@@ -29,7 +29,7 @@ public class LocationMapper
 	public TextParser textParser;
 	public PartManager partManager;
 	
-	public LocationMapper(String[] args)
+	public Mapper(String[] args)
 	{
 		Log.doConsolePrint = true;
 		
@@ -334,20 +334,5 @@ public class LocationMapper
 	}
 	
 	
-	public static void main(String[] args) 
-	{
-		
-		try
-		{
-			new LocationMapper(args);
-		}
-		catch (Exception e)
-		{
-			Log.log("Critical ERROR: " + e  + ".  saving log and exiting...", e);
-			Log.saveLog(logDir, "_CRITIAL_ERROR_LOG_" + new DateTime() + ".log", false);
-			System.exit(3);
-		}
-	}
-
 	
 }

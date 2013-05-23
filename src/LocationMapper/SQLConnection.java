@@ -129,7 +129,7 @@ public class SQLConnection
 		if(this.Connect() == false)
 		{
 			Log.log("ERROR: unable to get data from server");
-			LocationMapper.Exit(4);
+			Mapper.Exit(4);
 		}
 		
 		try

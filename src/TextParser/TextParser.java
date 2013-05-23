@@ -2,6 +2,7 @@ package TextParser;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +32,7 @@ public class TextParser
 			DataInputStream in = new DataInputStream(inStream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-			
+
 			if(skipFirstLine)
 				br.readLine();
 
@@ -58,32 +59,64 @@ public class TextParser
 
 	private boolean writeText(String primDir, String optionDir, ArrayList<String> data)
 	{
+
 		String fileLocation = primDir;
 
 		if(optionDir != null && optionDir.equals("") == false)
 			fileLocation += "/" + optionDir;
-		
-		
-		FileWriter out = null;
+
+
 		try
 		{
-			out = new FileWriter(new File(fileLocation));
+
+			BufferedWriter out = new BufferedWriter(new FileWriter(new File(fileLocation)));
+
 			for(String line : data)
 			{
-				out.write(line + "\n");
+				out.write(line);
+				out.newLine();
 			}
 
-			if(out != null)
-				out.close();
+
+			out.close();
 		}
 		catch (Exception e)
 		{
+			Log.log("Failed to write out " + fileLocation ,e);
 			return false;
 		}
 
+
+
+		//		
+		//		String fileLocation = primDir;
+		//
+		//		if(optionDir != null && optionDir.equals("") == false)
+		//			fileLocation += "/" + optionDir;
+		//		
+		//		
+		//		FileWriter out = null;
+		//		try
+		//		{
+		//			File file = new File(fileLocation);
+		//			out = new FileWriter(file);
+		//			for(String line : data)
+		//			{
+		//				out.write(line + "\n");
+		//			}
+		//
+		//			if(out != null)
+		//				out.close();
+		//		}
+		//		catch (Exception e)
+		//		{
+		//			Log.log("Failed to write out " + fileLocation ,e);
+		//			return false;
+		//		}
+
 		return true; 
-	  }
-	
+	}
+
 	private Location stndFromStatoids(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex, Column column) 
 	{
 
@@ -273,11 +306,11 @@ public class TextParser
 	public boolean loadText(String dataDir)
 	{
 		String tempFileLoc = null;
-		
-		
+
+
 		Log.log("Loading individial text data files for processing and combining");
-		
-		
+
+
 		Log.log("Loading removeEndings");
 		tempFileLoc = dataDir + "/text/removeEndings.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
@@ -348,20 +381,20 @@ public class TextParser
 
 
 
-	public void doProcessing(String dataDir)
+	public void CreateMasterOut(String dataDir)
 	{
 		String tempFileLoc = null;
-		
-		
-		Log.log("Proccessing text data");
-		
+
+
+		Log.log("Proccessing text data for MasterOut");
+
 
 		tempFileLoc = dataDir + "/text/keyRemove.txt";
 		Log.log(Log.tab + "Proccessing " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
 			String[] strings = string.split("\t");
-			
+
 			if(strings.length == 1)// remove whole location it
 			{
 				String key = strings[0];
@@ -369,15 +402,15 @@ public class TextParser
 				Location tempLocation = this.allLoc.remove(key);
 				if(tempLocation == null)
 					Log.log("ERROR could not remove location: " + key + "key not found. either wrong key or target location does not exist", true);
-				
+
 			}
 			if(strings.length == 2) // remove matchname
 			{
 				String key = strings[0];
 				String[] values = strings[1].split(",");
-				
+
 				Location tempLocation = this.allLoc.get(key);
-				
+
 				if(tempLocation != null)
 				{
 					for(String value : values)
@@ -389,9 +422,9 @@ public class TextParser
 					Log.log("ERROR could not remove matchNames from location: " + key + "key not found. either wrong key or target location does not exist", true);
 
 			}
-			
+
 		}
-		
+
 
 		tempFileLoc = dataDir + "/text/keyAdd.txt";
 		Log.log(Log.tab + "Proccessing " + tempFileLoc);
@@ -414,10 +447,10 @@ public class TextParser
 				}
 
 				addToAllLoc(tempLoc);
-//				if(tempLoc != null)
-//				{
-//					noDups.put(tempLoc.getKey(), tempLoc);
-//				}
+				//				if(tempLoc != null)
+				//				{
+				//					noDups.put(tempLoc.getKey(), tempLoc);
+				//				}
 			}
 			else if(strings.length == 2) // add matchname
 			{
@@ -444,24 +477,23 @@ public class TextParser
 				Log.log(Log.tab + "addKey: Wrong number of Delimeters:" + strings.length + ".  " + string, true);
 		}
 
-		
-	
-		
-		
-		
+
+
+
+
+
 		tempFileLoc = dataDir + "/text/MasterOut.txt";
 		Log.log("Writing " + tempFileLoc);
 		ArrayList<String> outStrings = new ArrayList<String>(allLoc.size());
 		for(Location loc : allLoc.values())
 			outStrings.add(loc.toString());
 		Collections.sort(outStrings);
-		this.writeText(dataDir, null, outStrings);
+		this.writeText(tempFileLoc, null, outStrings);
 		Log.log(Log.tab + outStrings.size() + " Locations");
-		
+
 
 
 	}
-
 
 
 

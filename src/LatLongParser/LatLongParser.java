@@ -29,6 +29,24 @@ public class LatLongParser
 		
 	}
 	
+
+	public void setLocation(Record record)
+	{
+		Area area = world;
+		
+		while((area = area.getFirstAreaWithin(record.longitude, record.latitude)) != null)
+			if(record.data.containsKey(area.column) == false)
+				record.data.put(area.column, area.officialName);
+		
+		
+	}
+	
+//	public void setLocationFromLatLong (Area area) throws Exception 
+//	{
+//		while((area = area.getFirstAreaWithin(longitude, latitude)) != null)
+//			if(this.data.containsKey(area.column) == false)
+//				this.data.put(area.column, area.officialName);
+//	}
 	
 	
 	

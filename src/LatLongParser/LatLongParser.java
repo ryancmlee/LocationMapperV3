@@ -175,7 +175,7 @@ public class LatLongParser
 		    	String fipsNumber = stateShape.getDBF_record(0,0);
 		    	Area stateArea = stateNumbertoStateAreaMap.get(fipsNumber);
 		    	
-		    	Log.log(Log.tab + Log.tab + Log.tab + i + "\tloading: " + stateArea.officialName + "  fips:\t" + fipsNumber);
+		    	//Log.log(Log.tab + Log.tab + Log.tab + i + "\tloading: " + stateArea.officialName + "  fips:\t" + fipsNumber);
 		    	
 		    	if ( stateArea != null) // make sure we got the state
 		    	{

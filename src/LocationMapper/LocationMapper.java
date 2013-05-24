@@ -36,7 +36,7 @@ public class LocationMapper
 	public LocationMapper(String[] args)
 	{
 		Log.doConsolePrint = true;
-		Log.doLog = false;
+		Log.doLog = true;
 		
 		String address = null;
 		String serverName = null;

@@ -106,14 +106,14 @@ public class LocationMapper
 	
 		//load textParser
 		TextParser textParser = new TextParser();
-		textParser.loadText(dataDir);
+		HashMap<String, String> temp = textParser.loadText(dataDir);
 		textParser.CreateMasterOut(dataDir);
 
 	
 		
 		
 		//build partmap
-		partManager = new PartManager(textParser.allLoc, "[, ]");
+		partManager = new PartManager(textParser.allLoc, "[, ]", temp);
 		
 		
 		

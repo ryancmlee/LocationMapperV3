@@ -1,6 +1,7 @@
 package TextParser;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import LatLongParser.Column;
@@ -16,7 +17,7 @@ public class Location
 
 	public long population = 0;
 
-	public HashSet<String> matchNames = new HashSet<String>();
+	public ArrayList<String> matchNames = new ArrayList<String>();
 	
 	public int hits = 0;
 
@@ -32,9 +33,9 @@ public class Location
 			outName = temps[0];
 		
 		this.outName = outName.trim();
-		this.countryCode = makeNice(country);
-		this.stateCode = makeNice(state);
-		this.cityCode =  makeNice(city);
+		this.countryCode = country;
+		this.stateCode = state;
+		this.cityCode =  city;
 		this.population = population;
 		this.column = column;
 
@@ -42,7 +43,7 @@ public class Location
 		if(matchNames != null)
 		{
 			for(String string : matchNames)
-				this.matchNames.add(makeNice(string));
+				this.matchNames.add(string);
 		}
 	
 	}
@@ -110,28 +111,28 @@ public class Location
 
 	
 	
-	public static String makeNice(String string)
-	{
-		
-		if(string == null)
-			return "";
-		
-		string = string.trim();
-		string = string.toLowerCase();
-		
-		
-		for	(String ending : TextParser.removeEndings)
-		{
-			if(string.endsWith(ending))
-			{
-				string = string.replace(ending, "");
-				return string.trim();
-			}
-		}
-		
-		
-		return string;
-	}
+//	public static String makeNice(String string)
+//	{
+//		
+//		if(string == null)
+//			return "";
+//		
+//		string = string.trim();
+//		string = string.toLowerCase();
+//		
+//		
+//		for	(String ending : TextParser.removeEndings)
+//		{
+//			if(string.endsWith(ending))
+//			{
+//				string = string.replace(ending, "");
+//				return string.trim();
+//			}
+//		}
+//		
+//		
+//		return string;
+//	}
 
 
 	@Override 

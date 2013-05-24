@@ -50,9 +50,10 @@ public class PartManager
 //		
 //	}
 	
-	public PartManager(HashMap<String, Location> allLocations, String regex)
+	public PartManager(HashMap<String, Location> allLocations, String regex, HashMap<String, String> makeSuperNiceList)
 	{
 		this.regex = regex;
+		this.makeNiceList = makeSuperNiceList;
 
 				
 		Log.log("Building Location String Graph");
@@ -166,7 +167,28 @@ public class PartManager
 		
 	}
 	
-	
+	HashMap<String, String> makeNiceList = new HashMap<String, String>();
+	public String makeSuperNice(String string)
+	{
+		if(string == null)
+			return "";
+		
+		string = string.trim();
+		
+		
+		for(String key : makeNiceList.keySet())
+		{
+			if(key.length() == 1)
+				string = string.replace(key, makeNiceList.get(key));
+			else
+				string = string.replace(" " + key + " ", makeNiceList.get(key));
+		}
+		
+		
+		string = string.toLowerCase();
+		
+		return string;
+	}
 	
 	
 	
@@ -184,10 +206,27 @@ public class PartManager
 			countryCount++;
 		
 		
+		location.cityCode = makeSuperNice(location.cityCode);
+		location.stateCode = makeSuperNice(location.stateCode);
+		location.countryCode = makeSuperNice(location.countryCode);
+		
+
+		for(int i = 0; i < location.matchNames.size(); i++)
+		{
+			String temp = location.matchNames.get(i);
+			temp = makeSuperNice(temp);
+			location.matchNames.set(i, temp);
+		}
+		
+		
 		
 		for (String name : location.matchNames)
 		{
 			ArrayList<String> locParts = new ArrayList<String>();
+			
+			
+			
+			
 			
 			try
 			{

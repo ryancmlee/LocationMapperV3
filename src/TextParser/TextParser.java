@@ -1,6 +1,7 @@
 package TextParser;
 
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -309,15 +310,39 @@ public class TextParser
 	}
 
 
-
-	public boolean loadText(String dataDir)
+	
+	public HashMap<String, String> loadText(String dataDir)
 	{
 		String tempFileLoc = null;
-
+		HashMap<String, String> makeNiceList = new  HashMap<String, String>();
 
 		Log.log("Loading individial text data files for processing and combining");
 
 
+		Log.log("Loading makeNice");
+		tempFileLoc = dataDir + "/text/makeNice.txt";
+		for(String string : LoadTextFile(tempFileLoc, null, false))
+		{
+			String[] strings = string.split("\t");
+			try
+			{
+				String key = strings[0];
+				String value = " ";
+				if(strings.length > 1)
+					value = strings[1];
+				makeNiceList.put(key, value);
+			}
+			catch (Exception e)
+			{
+				Log.log(Log.tab + "error in loading MakeNiceList: " + e + "for: " + string);
+			}
+		}
+	
+		
+		
+		
+		
+		
 		Log.log("Loading removeEndings");
 		tempFileLoc = dataDir + "/text/removeEndings.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
@@ -387,7 +412,7 @@ public class TextParser
 
 		Log.log("Load of text data complete");
 
-		return true;
+		return makeNiceList;
 	}
 
 

@@ -60,7 +60,7 @@ public class SQLConnection
 		String tempString = record.getUpdateStatement();
 		sendString += tempString;
 		
-
+		parseCount++;
 		if(parseCount % this.batchCount == 0)
 		{
 			try
@@ -90,7 +90,7 @@ public class SQLConnection
 	
 	public void flush() throws SQLException
 	{
-		parseCount = 0;
+		//parseCount = 0;
 
 		Statement stmt = connection.createStatement();
 		stmt.executeUpdate(sendString);

@@ -55,8 +55,8 @@ public class Record
 //			//	value = locMapper.standardFormatMap.get(value);
 			
 		
-			if(key != Column.country)
-				continue;
+//			if(key != Column.country)
+//				continue;
 			
 
 			if(value.equals("united states"))
@@ -67,8 +67,8 @@ public class Record
 			tempColumn.add(key);
 			
 			if(i++ < data.size() - 1)
-				tempStatement += " ";
-			tempStatement += ", ";
+				tempStatement += ",";
+			tempStatement += " ";
 			
 			
 		}	
@@ -85,7 +85,7 @@ public class Record
 				
 				
 				
-				if(tempColumn.contains(key) || key != Column.country)sadfadf  // remove this?
+				if(tempColumn.contains(key))// || key != Column.country)// remove this?
 					continue;
 				
 	//			if(locMapper.standardFormatMap.containsKey(value))
@@ -98,8 +98,8 @@ public class Record
 				
 				
 				if(j++ < locData.size() - 1)
-					tempStatement += " ";
-				tempStatement += ", ";
+					tempStatement += ",";
+				tempStatement += " ";
 			}
 			
 		}

@@ -158,6 +158,8 @@ public class LocationMapper
 				String twitter_user_lang = results.getString(5);
 				
 
+				
+				
 				Record record = new Record(id, latitude, longitude, twitter_user_location, twitter_user_lang);
 				
 				

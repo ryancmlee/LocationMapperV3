@@ -75,16 +75,21 @@ public class PartManager
 	public ArrayList<Location> getLocations(String text)
 	{
 		HashSet<Location> locations = new HashSet<Location>();
+		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<Location> asdf = new ArrayList<Location>();
 		
+		
+		if(text == null)
+			return asdf;
 		
 		String[] strings = text.split(regex);
 		
-		ArrayList<String> data = new ArrayList<String>();
-		for(String asdf : strings)
+		
+		for(String string : strings)
 		{
-			asdf = asdf.trim();
-			if(asdf.equals("") == false)
-				data.add(asdf);
+			string = string.trim();
+			if(string.equals("") == false)
+				data.add(string);
 		}
 		
 		//data.add("");
@@ -145,7 +150,7 @@ public class PartManager
 			locations.addAll(currPart.locations);
 		}
 		
-		ArrayList<Location> asdf = new ArrayList<Location>();
+		
 		asdf.addAll(locations);
 		
 		

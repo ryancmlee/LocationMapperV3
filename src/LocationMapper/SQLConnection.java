@@ -17,8 +17,10 @@ public class SQLConnection
 	ResultSet results = null;
 	
 	public final String statement = "" +
-	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location from datasift_results " +
-	"WHERE country is null AND id > 25800000 AND id < 27000000" + //" + // id > 25800000 " + //
+	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
+	"from datasift_results " +
+	"WHERE country is null " +
+	"AND id > 25800000 AND id < 26000000 " + //" + // id > 25800000 " + //
 	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";
 //	final String statement = "" +
 //			"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
@@ -68,8 +70,7 @@ public class SQLConnection
 			}
 			catch (Exception e)
 			{
-				Log.log("ERROR: stmt.executeUpdate(sendString) threw error: " + e.getMessage());
-				Log.log("dumping statement : " + e.getMessage());
+				Log.log("ERROR: stmt.executeUpdate(sendString) threw error: " + e);
 				Log.log(sendString);
 
 			}
@@ -129,13 +130,13 @@ public class SQLConnection
 		if(this.Connect() == false)
 		{
 			Log.log("ERROR: unable to get data from server");
-			Mapper.Exit(4);
+			LocationMapper.Exit(4);
 		}
 		
 		try
 		{
 			Statement stmt = connection.createStatement();
-			Log.log("Querying Server: + statement");
+			Log.log("Querying Server: " + statement);
 			results = stmt.executeQuery(statement);
 		}
 		catch (Exception e)

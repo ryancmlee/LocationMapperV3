@@ -14,7 +14,7 @@ import TextParser.PartManager;
 import TextParser.TextParser;
 
 
-public class Mapper 
+public class LocationMapper 
 {
 	public static String workDir = "";
 	public static String logDir = "";
@@ -26,15 +26,19 @@ public class Mapper
 	
 	
 	public LatLongParser latLongParser;
-	public TextParser textParser;
+	//public TextParser textParser;
 	public PartManager partManager;
 	
-	public Mapper(String[] args)
+	
+	
+	
+	
+	public LocationMapper(String[] args)
 	{
 		Log.doConsolePrint = true;
 		
 		String address = null;
-		String tableName = null;
+		String serverName = null;
 		String port = null;
 		String userName = null;
 		String password = null;
@@ -44,7 +48,7 @@ public class Mapper
 		try
 		{
 			address   = args[0];
-			tableName  = args[1];
+			serverName  = args[1];
 			port  = args[2];
 			userName  = args[3];
 			password = args[4];
@@ -64,7 +68,7 @@ public class Mapper
 		{
 			Log.log("args[] error:");
 			Log.log("address = args[0]");
-			Log.log("tableName = args[1]");
+			Log.log("serverName = args[1]");
 			Log.log("port = args[2]");
 			Log.log("userName = args[3]");
 			Log.log("password = args[4");
@@ -78,7 +82,7 @@ public class Mapper
 		
 		Log.log("Starting : " + startDateTime);
 		Log.log("address = " + address);
-		Log.log("tableName = " + tableName);
+		Log.log("tableName = " + serverName);
 		Log.log("port = " + port);
 		Log.log("userName = " + userName);
 		Log.log("password = " + password);
@@ -87,7 +91,7 @@ public class Mapper
 		
 		
 		//test connection to server
-		sqlConnection = new SQLConnection(address, tableName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
+		sqlConnection = new SQLConnection(address, serverName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
 		if(this.sqlConnection.Connect() == false)
 		{
 			Log.log("Unable to connecto to sql server");
@@ -97,19 +101,26 @@ public class Mapper
 		}
 		
 		
+	
+			//load textParser
+			TextParser textParser = new TextParser();
+			textParser.loadText(dataDir);
+			textParser.CreateMasterOut(dataDir);
+
+	
 		
-		//load textParser
-		textParser = new TextParser();
-		textParser.loadText(dataDir);
-		textParser.CreateMasterOut(dataDir);
 		
 		//build partmap
 		partManager = new PartManager(textParser.allLoc, "[, ]");
+		
+		
 		
 
 		//load LatLongParser
 		latLongParser = new LatLongParser();
 		latLongParser.loadData(dataDir);
+		
+	
 		
 		//get data from server
 		ResultSet results = sqlConnection.getData();
@@ -154,10 +165,6 @@ public class Mapper
 				partManager.setMatchStrings(record);
 				
 		
-				
-				
-				
-				
 				
 				
 				HashMap<String, Location> cities = new HashMap<String, Location>();

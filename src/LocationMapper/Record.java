@@ -67,8 +67,8 @@ public class Record
 			tempColumn.add(key);
 			
 			if(i++ < data.size() - 1)
-				tempStatement += ",";
-			tempStatement += " ";
+				tempStatement += " ";
+			tempStatement += ", ";
 			
 			
 		}	
@@ -85,7 +85,7 @@ public class Record
 				
 				
 				
-				if(tempColumn.contains(key) || key != Column.country)
+				if(tempColumn.contains(key) || key != Column.country)sadfadf  // remove this?
 					continue;
 				
 	//			if(locMapper.standardFormatMap.containsKey(value))
@@ -98,8 +98,8 @@ public class Record
 				
 				
 				if(j++ < locData.size() - 1)
-					tempStatement += ",";
-				tempStatement += " ";
+					tempStatement += " ";
+				tempStatement += ", ";
 			}
 			
 		}

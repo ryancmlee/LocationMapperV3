@@ -79,12 +79,12 @@ public class LatLongParser
 	    }
 		catch (Exception e)
 		{
-			Log.log("Failed to Load all countires: " + e.getMessage());
+			Log.log(Log.tab +"Failed to Load all countires: " + e.getMessage());
 			return false;
 		}
 		
 		
-		Log.log("Loading Germany");
+		Log.log(Log.tab + "Loading Germany");
 		try 
 		{
 			boolean tempSucsess = false;
@@ -103,16 +103,16 @@ public class LatLongParser
 				}
 			}
 			if (!tempSucsess)
-				throw new Exception("failed to find country with name: de");
+				throw new Exception(Log.tab +"failed to find country with name: de");
 		}
 		catch(Exception e)
 		{
-			Log.log("Failed to load Germany: " + e.getMessage());
+			Log.log(Log.tab +"Failed to load Germany: " + e.getMessage());
 			return false;
 		}
 		
 		
-		Log.log("Loading USA (takes time)...");
+		Log.log(Log.tab + "Loading USA (takes time)...");
 		try 
 		{
 			boolean tempSucsess = false;
@@ -130,7 +130,7 @@ public class LatLongParser
 		}
 		catch(Exception e)
 		{
-			Log.log("Failed to load USA: "+e.getMessage());
+			Log.log(Log.tab + "Failed to load USA: "+e.getMessage());
 			return false;
 		}
 		
@@ -175,6 +175,7 @@ public class LatLongParser
 		    	String fipsNumber = stateShape.getDBF_record(0,0);
 		    	Area stateArea = stateNumbertoStateAreaMap.get(fipsNumber);
 		    	
+		    	Log.log(Log.tab + Log.tab + Log.tab + i + "\tloading: " + stateArea.officialName + "  fips:\t" + fipsNumber);
 		    	
 		    	if ( stateArea != null) // make sure we got the state
 		    	{

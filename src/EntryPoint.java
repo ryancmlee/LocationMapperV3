@@ -1,6 +1,6 @@
 import org.joda.time.DateTime;
 
-import LocationMapper.Mapper;
+import LocationMapper.LocationMapper;
 import LocationMapper.Log;
 
 
@@ -13,12 +13,12 @@ public class EntryPoint
 		
 		try
 		{
-			new Mapper(args);
+			new LocationMapper(args);
 		}
 		catch (Exception e)
 		{
 			Log.log("Critical ERROR: " + e  + ".  saving log and exiting...", e);
-			Log.saveLog(Mapper.logDir, "_CRITIAL_ERROR_LOG_" + new DateTime() + ".log", false);
+			Log.saveLog(LocationMapper.logDir, "_CRITIAL_ERROR_LOG_" + new DateTime() + ".log", false);
 			System.exit(3);
 		}
 	}

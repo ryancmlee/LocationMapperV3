@@ -18,7 +18,7 @@ import diewald_shapeFile.files.shp.shapeTypes.ShpPolygon;
 
 public class Area implements Serializable
 {
-	public boolean doCommpression = false;
+	public static boolean doCommpression = false;
 	
 	public String officialName;
 	public Column column;

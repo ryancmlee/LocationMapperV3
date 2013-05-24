@@ -296,6 +296,13 @@ public class TextParser
 	String blank = "_";
 	long minPop = 3000;
 
+	
+	public void close()
+	{
+		allLoc = null;
+		removeEndings = null;
+	}
+	
 
 	public TextParser()
 	{
@@ -366,6 +373,11 @@ public class TextParser
 		for(String string : tempWorldCitiesPopList)
 		{
 			Location tempLoc = fromWorldCitiesPop(string);
+
+			if(tempLoc != null && tempLoc.population < minPop)
+				continue;
+			
+			
 			addToAllLoc(tempLoc);
 			if(i++ % tempThing == 0)
 				Log.log(Log.tab + Log.tab + i + "\t" + string);
@@ -514,16 +526,20 @@ public class TextParser
 		}
 
 
-		this.allLoc.put(loc.getKey(), loc);
-		//		Location temp = this.allLoc.put(loc.getKey(), loc);
 
-		//		if(temp != null)
-		//		{
-		//			Log.log("DEBUG: duplacate key found while adding to allLoc...");
-		//			Log.log(Log.tab	+ "Added:   " + loc.toString());
-		//			Log.log(Log.tab	+ "Removed: " + temp.toString());
-		//			return true;
-		//		}
+		Location old = this.allLoc.put(loc.getKey(), loc);
+
+		if(old != null)
+		{
+			
+			if(old.population > loc.population)
+				this.allLoc.put(old.getKey(), old);
+			
+//			Log.log("DEBUG: duplacate key found while adding to allLoc...");
+//			Log.log(Log.tab	+ "Added:   " + loc.toString());
+//			Log.log(Log.tab	+ "Removed: " + old.toString());
+//			return true;
+		}
 
 		return true;
 	}

@@ -36,13 +36,14 @@ public class LocationMapper
 	public LocationMapper(String[] args)
 	{
 		Log.doConsolePrint = true;
+		Log.doLog = false;
 		
 		String address = null;
 		String serverName = null;
 		String port = null;
 		String userName = null;
 		String password = null;
-		
+
 		
 
 		try
@@ -52,6 +53,7 @@ public class LocationMapper
 			port  = args[2];
 			userName  = args[3];
 			password = args[4];
+
 			
 
 			if(args.length > 5 && (args[5] != null || args[5] != "" || args[5] != "0"))
@@ -59,7 +61,7 @@ public class LocationMapper
 				dataDir = args[5];
 				if(new File(dataDir).exists() == false)
 				{
-					Log.log("ERROR: unable to verify workingDir path: " + dataDir);
+					Log.log("ERROR: unable to verify dataDir path: " + dataDir);
 					throw new Exception("");
 				}
 			}
@@ -102,10 +104,10 @@ public class LocationMapper
 		
 		
 	
-			//load textParser
-			TextParser textParser = new TextParser();
-			textParser.loadText(dataDir);
-			textParser.CreateMasterOut(dataDir);
+		//load textParser
+		TextParser textParser = new TextParser();
+		textParser.loadText(dataDir);
+		textParser.CreateMasterOut(dataDir);
 
 	
 		
@@ -318,19 +320,13 @@ public class LocationMapper
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	public String makeNice(String string)
 	{
+		if(string == null)
+			return "";
 		
-		
-		
+		string = string.trim();
+		string = string.toLowerCase();
 		
 		return string;
 	}
@@ -338,7 +334,8 @@ public class LocationMapper
 	
 	public static void Exit(int status)
 	{
-		Log.saveLog(logDir, "log_" + new DateTime().toString().replaceAll(":", ".") + ".log", false);
+		if(Log.doLog)
+			Log.saveLog(logDir, "log_" + new DateTime().toString().replaceAll(":", ".") + ".log", false);
 		System.exit(status);
 	}
 	

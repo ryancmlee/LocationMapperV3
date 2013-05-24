@@ -16,6 +16,7 @@ public class Log
 	static public String breakString = "--------------------------------------------------------"; 
 	static DateTime startTime = new DateTime();
 	public static boolean doConsolePrint = true;
+	public static boolean doLog = true;
 	
 	private static String log = "";
 	
@@ -35,9 +36,8 @@ public class Log
 			else
 				System.out.println(out);
 		}
-			
-		
-		log += out + "\r\n";
+		if(doLog)
+			log += out + "\r\n";
 	}
 	
 	public static void log(String data, Exception e)

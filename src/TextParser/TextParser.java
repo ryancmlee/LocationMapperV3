@@ -333,6 +333,9 @@ public class TextParser
 				String value = " ";
 				if(strings.length > 1)
 					value = strings[1];
+				
+				if(key.length() > 1)
+					value = " " + value + " ";
 				makeNiceList.put(key, value);
 			}
 			catch (Exception e)
@@ -349,7 +352,7 @@ public class TextParser
 		tempFileLoc = dataDir + "/text/removeEndings.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, true))
-			removeEndings.add(string);
+			removeEndings.add(string.toLowerCase());
 		//Log.log(Log.tab + removeEndings.size() + " removeEndings loaded");
 
 
@@ -552,12 +555,13 @@ public class TextParser
 		
 		for(String key : makeNiceList.keySet())
 		{
-			if(key.length() == 1)
+//			if(key.length() == 1)
 				string = string.replace(key, makeNiceList.get(key));
-			else
-				string = string.replace(" " + key + " ", makeNiceList.get(key));
+//			else
+//				string = string.replace(" " + key + " ", makeNiceList.get(key));
 		}
 		
+		string = string.trim().toLowerCase();
 		
 		for	(String ending : removeEndings)
 		{

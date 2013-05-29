@@ -12,6 +12,8 @@ import TextParser.Location;
 
 public class Record 
 {
+	final String countryNone =  "'NONE'";
+	
 	
 	int id;
 	public float latitude;
@@ -36,84 +38,7 @@ public class Record
 	}
 	
 	
-
-//	public String getUpdateStatement()
-//	{
-//		
-//		String tempStatement = "UPDATE datasift_results SET "; 
-//
-//		ArrayList<Column> tempColumn = new ArrayList<Column>();
-//		
-//		int i = 0;
-//		for(Entry<Column, String> entry : locData.entrySet())
-//		{
-//			String value = entry.getValue();
-//			Column key = entry.getKey();
-//			
-////			//if(locMapper.standardFormatMap.containsKey(value))
-////			//	value = locMapper.standardFormatMap.get(value);
-//			
-//		
-//			
-//
-//			if(value.equals("united states") || value.equals("us"))
-//				tempStatement += key + "='" + "United States" + "'";
-//			else
-//				tempStatement += key + "='" + value.replace("'", "''") + "'";
-//			
-//			tempColumn.add(key);
-//			
-//			if(i++ < locData.size() - 1)
-//				tempStatement += ",";
-//			tempStatement += " ";
-//			
-//			
-//		}	
-//		
-//		
-//		int j = 0;
-//		if(i == 0)
-//		{
-//			
-//			for(Entry<Column, Location> entry : textData.entrySet())
-//			{
-//				String value = entry.getValue().outName;
-//				Column key = entry.getKey();
-//				
-//				
-//				
-//				if(tempColumn.contains(key))// || key != Column.country)// remove this?
-//					continue;
-//				
-//	//			if(locMapper.standardFormatMap.containsKey(value))
-//	//				value = locMapper.standardFormatMap.get(value);
-//				
-//				if(value.equals("us") && key == Column.country)
-//					tempStatement += key + "='" + "United States" + "'";
-//				else
-//					tempStatement += key + "='" + value.replace("'", "''") + "'";
-//				
-//				
-//				if(j++ < textData.size() - 1)
-//					tempStatement += ",";
-//				tempStatement += " ";
-//			}
-//			
-//		}
-//
-//		
-//		
-//		
-//		if(j == 0 && i == 0)
-//			tempStatement += "country='NONE' ";
-//		
-//
-//		
-//		return  tempStatement + "WHERE id=" + id + "; ";
-//		
-//		
-//	}
-	final String countryNone =  "'NONE'";
+	
 	public String getUpdateStatement()
 	{
 		
@@ -127,6 +52,9 @@ public class Record
 		{
 			Column key = entry.getKey();
 			String value = entry.getValue();
+			
+			if(key == Column.country && value.equals("us"))
+				value = "United States";
 			
 	
 			if(key == Column.country && country.equals(countryNone))
@@ -153,6 +81,8 @@ public class Record
 			Column key = entry.getKey();
 			String value = entry.getValue().outName;
 			
+			if(key == Column.country && value.equals("us"))
+				value = "United States";
 	
 			if(key == Column.country && country.equals(countryNone))
 			{

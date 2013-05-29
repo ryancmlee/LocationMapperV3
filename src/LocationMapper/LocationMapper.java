@@ -19,6 +19,7 @@ public class LocationMapper
 	public static String workDir = "";
 	public static String logDir = "";
 	public static String dataDir = "data";
+	public static String textDir = "text";
 	
 	public DateTime startDateTime;;
 
@@ -95,7 +96,7 @@ public class LocationMapper
 		Log.log(Log.breakString);
 		
 		
-		//test connection to server
+//		test connection to server
 		sqlConnection = new SQLConnection(address, serverName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
 		if(this.sqlConnection.Connect() == false)
 		{
@@ -123,7 +124,7 @@ public class LocationMapper
 
 		//load LatLongParser
 		latLongParser = new LatLongParser();
-		latLongParser.loadData(dataDir);
+//		latLongParser.loadData(dataDir);
 		
 	
 		
@@ -156,6 +157,16 @@ public class LocationMapper
 			{
 
 				int id = results.getInt(1);
+				
+				
+//				if(id == 33988981)
+//				{
+//					
+//					int asdf = 234;
+//				}
+//				else
+//					continue;
+				
 				float latitude = (float)results.getDouble(2);
 				float longitude = (float)results.getDouble(3);
 				String twitter_user_location = results.getString(4);
@@ -163,6 +174,25 @@ public class LocationMapper
 				String twitter_user_lang = results.getString(5);
 				
 
+//				if(twitter_user_lang.equals("es"))
+//					twitter_user_location = twitter_user_location.replaceAll( " de | la | me | en | mi | el | del |el " , " ");
+				
+				if(twitter_user_lang.equals("es"))
+				{
+					String temp = twitter_user_location;
+					while(true)
+					{
+						twitter_user_location = twitter_user_location.replaceAll( " de | la | me | en | mi | el | del |el " , " ");
+						
+						if(temp.equals(twitter_user_location))
+							break;
+
+						 temp = twitter_user_location;
+					}
+				
+				}
+			
+				
 				
 				
 				Record record = new Record(id, latitude, longitude, twitter_user_location, twitter_user_lang);

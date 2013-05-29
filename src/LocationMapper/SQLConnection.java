@@ -10,6 +10,7 @@ public class SQLConnection
 {
 	public final int timeout = 5;
 	public final int batchCount = 5000;
+	public final int fetchSize = 20000;
 	public int parseCount = 0;
 	
 	
@@ -19,7 +20,7 @@ public class SQLConnection
 	public final String statement = "" +
 	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
 	"FROM datasift_results " +
-	"WHERE id > 33980000 " + //country is null " + 
+	"WHERE country is null " + 
 	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";
 	
 //	final String statement = "" +
@@ -131,7 +132,10 @@ public class SQLConnection
 		
 		try
 		{
+			connection.setAutoCommit(false);
+			
 			Statement stmt = connection.createStatement();
+			stmt.setFetchSize(fetchSize);
 			Log.log("Querying Server: " + statement);
 			results = stmt.executeQuery(statement);
 		}

@@ -3,6 +3,7 @@ package LocationMapper;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.joda.time.DateTime;
@@ -135,7 +136,14 @@ public class LocationMapper
 		MapLocations(results);
 		
 	
-		
+		try 
+		{
+			results.close();
+		} 
+		catch (SQLException e)
+		{
+			Log.log("error closing reslutSet", e);
+		}
 		
 		
 		

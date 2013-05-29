@@ -124,7 +124,7 @@ public class LocationMapper
 
 		//load LatLongParser
 		latLongParser = new LatLongParser();
-//		latLongParser.loadData(dataDir);
+		latLongParser.loadData(dataDir);
 		
 	
 		
@@ -157,26 +157,13 @@ public class LocationMapper
 			{
 
 				int id = results.getInt(1);
-				
-				
-//				if(id == 33988981)
-//				{
-//					
-//					int asdf = 234;
-//				}
-//				else
-//					continue;
-				
 				float latitude = (float)results.getDouble(2);
 				float longitude = (float)results.getDouble(3);
 				String twitter_user_location = results.getString(4);
 				twitter_user_location = TextParser.makeSuperNice(twitter_user_location);	
 				String twitter_user_lang = results.getString(5);
 				
-
-//				if(twitter_user_lang.equals("es"))
-//					twitter_user_location = twitter_user_location.replaceAll( " de | la | me | en | mi | el | del |el " , " ");
-				
+			
 				if(twitter_user_lang.equals("es"))
 				{
 					String temp = twitter_user_location;

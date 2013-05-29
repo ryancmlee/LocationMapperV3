@@ -19,11 +19,11 @@ public class SQLConnection
 	public final String statement = "" +
 	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
 	"FROM datasift_results " +
-	//"WHERE id = 33986559" +
-	"WHERE id > 33980000 " + // AND id < 33100000 " + //" + // id > 25800000 " + //
+	"WHERE country is null" + 
 	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";
+	
 //	final String statement = "" +
-//			"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
+//			"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +	//"WHERE id > 33980000 " + // AND id < 33100000 " + //" + // id > 25800000 " + //
 //			"from datasift_results " +
 //			"WHERE interaction_created_at > '2013-04-01 00:00:00' " +
 //			"AND datasift_stream_id in (78, 88) " +

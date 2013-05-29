@@ -1,0 +1,30 @@
+//	REMOVE WHOLE LOCATION
+//	EXACTALY 1 entrie
+//	_0_	= unique location key  [iso country, iso state or "_", city name or "_" (no spaces or comma(space ok in city name only): i.e: los gatos would be: "uscaLos Gatos")]
+//
+//	Example city :
+//	uscalos gatos
+//
+//	Example state :
+//	usca_
+//
+//	Example country : 
+//	us__
+gbeng_
+gblnd_
+ustxearth
+ustxtexas
+
+
+//	REMOVE MATCH NAMES ONLY
+//	EXACTALY 2 entries delimited by tab (/t) 
+//	_0_	_1_
+//
+//	_1_ = unique location key  [iso country, iso state or "_", city name or "_" (no spaces or comma(space ok in city name only): i.e: los gatos would be: "uscaLos Gatos")]
+//	_2_ = remove matchNames  [comma (,) delimiter](i.e "town of los gatos, the cats")
+//
+//	Examples: (tabs are kinda hard to see)
+//	usacaLos Gatos	town of los gatos, the cats
+kp__	north
+tz19_	coast
+usohlondon	london

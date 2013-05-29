@@ -7,6 +7,6 @@
 .settings/
 *.log
 
-data/*
-!data/text/*
-data/text/MasterOut.txt
+/data/*
+!/data/text/
+/data/text/MasterOut.txt

@@ -131,6 +131,8 @@ public class LocationMapper
 		//get data from server
 		ResultSet results = sqlConnection.getData();
 		
+		Log.log("Got results!  processing recrods");
+
 		//Map Locations
 		MapLocations(results);
 		

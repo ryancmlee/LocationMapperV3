@@ -1,4 +1,4 @@
-package LocationMapper;
+ package LocationMapper;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,8 +19,9 @@ public class SQLConnection
 	public final String statement = "" +
 	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
 	"FROM datasift_results " +
-	"WHERE id > 33980000 " + //country is null " + 
-	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";
+	//"WHERE id > 30000000 " + 
+	"WHERE country is null " + 
+	"AND (twitter_user_location is not null or interaction_geo_latitude is not null) limit 1000000";
 	
 //	final String statement = "" +
 //			"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +	//"WHERE id > 33980000 " + // AND id < 33100000 " + //" + // id > 25800000 " + //

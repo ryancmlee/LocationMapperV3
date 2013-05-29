@@ -32,10 +32,10 @@ public class Location
 		if(temps.length > 1)
 			outName = temps[0];
 		
-		this.outName = outName.trim();
-		this.countryCode = country;
-		this.stateCode = state;
-		this.cityCode =  city;
+		this.outName = TextParser.makeSuperNice(outName);
+		this.countryCode = TextParser.makeSuperNice(country);
+		this.stateCode = TextParser.makeSuperNice(state);
+		this.cityCode =  TextParser.makeSuperNice(city);
 		this.population = population;
 		this.column = column;
 
@@ -43,7 +43,7 @@ public class Location
 		if(matchNames != null)
 		{
 			for(String string : matchNames)
-				this.matchNames.add(string);
+				this.matchNames.add(TextParser.makeSuperNice(string));
 		}
 	
 	}
@@ -110,29 +110,7 @@ public class Location
 	}
 
 	
-	
-//	public static String makeNice(String string)
-//	{
-//		
-//		if(string == null)
-//			return "";
-//		
-//		string = string.trim();
-//		string = string.toLowerCase();
-//		
-//		
-//		for	(String ending : TextParser.removeEndings)
-//		{
-//			if(string.endsWith(ending))
-//			{
-//				string = string.replace(ending, "");
-//				return string.trim();
-//			}
-//		}
-//		
-//		
-//		return string;
-//	}
+
 
 
 	@Override 

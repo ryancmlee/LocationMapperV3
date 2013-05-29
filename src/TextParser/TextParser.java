@@ -156,7 +156,7 @@ public class TextParser
 		}
 
 
-		return  new Location(oName, country, state, city, pop, column);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+		return  new Location(oName, country, state, city, pop, column, matchNames);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
 	}
 
 	private Location stndFromStatoidsCountires(String data, int oNameIndex, int countryAndStateIndex, int popIndex, Column column) 
@@ -191,7 +191,8 @@ public class TextParser
 		String city = strings[3].trim();
 		String oName = city;
 
-
+		
+		
 
 		long population = getPop(strings[6]);
 
@@ -278,6 +279,8 @@ public class TextParser
 		String city = strings[2];
 
 		long pop = getPop(strings[4]);
+		if(pop < minPop)
+			return null;
 
 
 		Location temp = new Location(oName, country, state, city, pop, Column.city);
@@ -291,8 +294,8 @@ public class TextParser
 	//key _ _ _,  location
 	public HashMap<String, Location> allLoc = new HashMap<String, Location>();
 
-	public static HashSet<String> removeEndings = new HashSet<String>();
-
+	static HashSet<String> removeEndings = new HashSet<String>();
+	static HashMap<String, String> makeNiceList = new HashMap<String, String>();
 
 	String blank = "_";
 	long minPop = 3000;
@@ -311,16 +314,16 @@ public class TextParser
 
 
 	
-	public HashMap<String, String> loadText(String dataDir)
+	public void loadText(String dataDir)
 	{
 		String tempFileLoc = null;
-		HashMap<String, String> makeNiceList = new  HashMap<String, String>();
-
+	
 		Log.log("Loading individial text data files for processing and combining");
 
 
-		Log.log("Loading makeNice");
+		
 		tempFileLoc = dataDir + "/text/makeNice.txt";
+		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
 			String[] strings = string.split("\t");
@@ -343,12 +346,11 @@ public class TextParser
 		
 		
 		
-		Log.log("Loading removeEndings");
 		tempFileLoc = dataDir + "/text/removeEndings.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, true))
 			removeEndings.add(string);
-		Log.log(Log.tab + removeEndings.size() + " removeEndings loaded");
+		//Log.log(Log.tab + removeEndings.size() + " removeEndings loaded");
 
 
 		tempFileLoc = dataDir + "/text/raw/usaStates.txt";
@@ -390,29 +392,32 @@ public class TextParser
 
 
 
-		int i = 0;
+		int i = 0, j = 0;
 		tempFileLoc = dataDir + "/text/raw/worldcitiespop.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		ArrayList<String> tempWorldCitiesPopList = LoadTextFile(tempFileLoc, null, true);
 		int tempThing = tempWorldCitiesPopList.size() / 10; 
 		for(String string : tempWorldCitiesPopList)
 		{
+			if(j++ % tempThing == 0)
+			Log.log(Log.tab + Log.tab + j + "\t" + string);
+		
 			Location tempLoc = fromWorldCitiesPop(string);
+			
 
-			if(tempLoc != null && tempLoc.population < minPop)
+			if(tempLoc != null)// tempLoc is null if  --> && tempLoc.population < minPop)
 				continue;
 			
-			
+			i++;
 			addToAllLoc(tempLoc);
-			if(i++ % tempThing == 0)
-				Log.log(Log.tab + Log.tab + i + "\t" + string);
+			
 		}
 		Log.log(Log.tab + Log.tab + i + "\tPotential Cities");
 
 
 		Log.log("Load of text data complete");
 
-		return makeNiceList;
+		return;
 	}
 
 
@@ -438,7 +443,7 @@ public class TextParser
 
 				Location tempLocation = this.allLoc.remove(key);
 				if(tempLocation == null)
-					Log.log("ERROR could not remove location: " + key + "key not found. either wrong key or target location does not exist", true);
+					Log.log("ERROR could not remove location: " + key + " key not found. either wrong key or target location does not exist", true);
 
 			}
 			if(strings.length == 2) // remove matchname
@@ -534,7 +539,41 @@ public class TextParser
 
 
 
-
+	
+	public static String makeSuperNice(String string)
+	{
+		if(string == null)
+			return "";
+		
+		string = string.trim().toLowerCase();
+		
+		
+		
+		
+		for(String key : makeNiceList.keySet())
+		{
+			if(key.length() == 1)
+				string = string.replace(key, makeNiceList.get(key));
+			else
+				string = string.replace(" " + key + " ", makeNiceList.get(key));
+		}
+		
+		
+		for	(String ending : removeEndings)
+		{
+			if(string.endsWith(ending))
+			{
+				string = string.replace(ending, "").trim();
+				break;
+			}
+			
+		}
+		
+		
+	
+		
+		return string;
+	}
 
 
 

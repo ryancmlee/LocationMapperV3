@@ -80,6 +80,9 @@ public class LocationMapper
 			Exit(1);
 		}
 		
+		this.logDir = dataDir + "/logs";
+		
+		
 		this.startDateTime = new DateTime();
 		
 		Log.log("Starting : " + startDateTime);
@@ -106,14 +109,14 @@ public class LocationMapper
 	
 		//load textParser
 		TextParser textParser = new TextParser();
-		HashMap<String, String> temp = textParser.loadText(dataDir);
+		textParser.loadText(dataDir);
 		textParser.CreateMasterOut(dataDir);
 
 	
 		
 		
 		//build partmap
-		partManager = new PartManager(textParser.allLoc, "[, ]", temp);
+		partManager = new PartManager(textParser.allLoc, "[, ]");
 		
 		
 		
@@ -156,7 +159,7 @@ public class LocationMapper
 				float latitude = (float)results.getDouble(2);
 				float longitude = (float)results.getDouble(3);
 				String twitter_user_location = results.getString(4);
-				twitter_user_location = makeNice(twitter_user_location);	
+				twitter_user_location = TextParser.makeSuperNice(twitter_user_location);	
 				String twitter_user_lang = results.getString(5);
 				
 
@@ -165,45 +168,32 @@ public class LocationMapper
 				Record record = new Record(id, latitude, longitude, twitter_user_location, twitter_user_lang);
 				
 				
-				latLongParser.setLocation(record);
+				latLongParser.setPossableLocations(record);
 				partManager.setMatchStrings(record);
 				
 		
 				
 				
 				HashMap<String, Location> cities = new HashMap<String, Location>();
-				HashMap<String, Location> countires = new HashMap<String, Location>();
 				HashMap<String, Location>  states = new HashMap<String, Location>();
+				HashMap<String, Location> countires = new HashMap<String, Location>();
+				
 				
 				for (Location loc : record.possableLocations)
 				{
 					loc.hits = 0;
 					if(loc.column == Column.city)
 					{
-//						if(loc.countryCode == "us" && record.twitter_user_lang == "es")
-//						{
-//							
-//						}
-//						else
-//						{
-							cities.put(loc.getKey(), loc);
-//						}
-							
+						cities.put(loc.getKey(), loc);	
 					}
 					else if(loc.column == Column.state_province)
 					{
-						if(loc.countryCode == "us" && record.twitter_user_lang == "es")
-//						{
-//							
-//						}
-//						else
-//						{
-							states.put(loc.getKey(), loc);
-//						}
-						
+						states.put(loc.getKey(), loc);
 					}
 					else if(loc.column == Column.country)
+					{
 						countires.put(loc.getKey(), loc);
+					}	
 				}
 				
 				
@@ -242,7 +232,7 @@ public class LocationMapper
 					}
 				}
 				if(highestPop != null)
-					record.locData.put(Column.city, highestPop);
+					record.textData.put(Column.city, highestPop);
 				
 				
 				pop = -1;
@@ -256,7 +246,7 @@ public class LocationMapper
 					}
 				}
 				if(highestPop != null)
-					record.locData.put(Column.state_province, highestPop);
+					record.textData.put(Column.state_province, highestPop);
 				
 				pop = -1;
 				highestPop = null;
@@ -269,32 +259,31 @@ public class LocationMapper
 					}
 				}
 				if(highestPop != null)
-					record.locData.put(Column.country, highestPop);
+					record.textData.put(Column.country, highestPop);
 				
 				
-				if(record.locData.containsKey(Column.country) == false) //no country 
+				
+				if(record.textData.containsKey(Column.country) == false) //no country 
 				{
-					if(record.locData.containsKey(Column.state_province) == false)  //no state
+					if(record.textData.containsKey(Column.state_province) == false)  //no state
 					{
-						if(record.locData.containsKey(Column.city) )//&& cities.size() <= 5) // no country or state yes city
+						if(record.textData.containsKey(Column.city) )//&& cities.size() <= 5) // no country or state yes city
 						{
-							String stateKey = record.locData.get(Column.city).getStateKey();
+							String stateKey = record.textData.get(Column.city).getStateKey();
 							Location stateLocation = partManager.allLocations.get(stateKey);
 							
 							if(stateLocation != null) 														//try fill state from city
-								record.locData.put(Column.state_province, stateLocation);						
+								record.textData.put(Column.state_province, stateLocation);						
 						}
 					}
-					if(record.locData.containsKey(Column.state_province)  && states.size() <= 5)  //yes state
+					if(record.textData.containsKey(Column.state_province)  && states.size() <= 5)  //yes state
 					{
-						String countryKey = record.locData.get(Column.state_province).getCountryKey();
+						String countryKey = record.textData.get(Column.state_province).getCountryKey();
 						Location countryLocation = partManager.allLocations.get(countryKey);
 						
 						if(countryLocation != null) 														//try fill country from state
-							record.locData.put(Column.country, countryLocation);	
+							record.textData.put(Column.country, countryLocation);	
 					}
-					
-					
 				}
 				
 

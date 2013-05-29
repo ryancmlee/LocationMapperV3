@@ -18,9 +18,8 @@ public class SQLConnection
 	
 	public final String statement = "" +
 	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
-	"from datasift_results " +
-	"WHERE country is null " +
-	"AND id > 25800000 AND id < 26000000 " + //" + // id > 25800000 " + //
+	"FROM datasift_results " +
+	"WHERE id > 33980000 " + // AND id < 33100000 " + //" + // id > 25800000 " + //
 	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";
 //	final String statement = "" +
 //			"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
@@ -72,14 +71,10 @@ public class SQLConnection
 			{
 				Log.log("ERROR: stmt.executeUpdate(sendString) threw error: " + e);
 				Log.log(sendString);
-
 			}
 			sendString = "";
 			
 		}
-		
-		
-		
 		
 		return true;
 	}

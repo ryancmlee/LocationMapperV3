@@ -18,36 +18,16 @@ public class LatLongParser
 	Area world = new Area("Earth", Column.planet, null, null);
 	
 	
-	public LatLongParser()
-	{
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-
-	public void setLocation(Record record)
+	public void setPossableLocations(Record record)
 	{
 		Area area = world;
 		
 		while((area = area.getFirstAreaWithin(record.longitude, record.latitude)) != null)
-			if(record.data.containsKey(area.column) == false)
-				record.data.put(area.column, area.officialName);
+			if(record.locData.containsKey(area.column) == false)
+				record.locData.put(area.column, area.officialName);
 		
 		
 	}
-	
-//	public void setLocationFromLatLong (Area area) throws Exception 
-//	{
-//		while((area = area.getFirstAreaWithin(longitude, latitude)) != null)
-//			if(this.data.containsKey(area.column) == false)
-//				this.data.put(area.column, area.officialName);
-//	}
-	
 	
 	
 	public boolean loadData(String dataDir)

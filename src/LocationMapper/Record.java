@@ -22,8 +22,8 @@ public class Record
 	
 	
 	public ArrayList<Location> possableLocations = new ArrayList<Location>();
-	public HashMap<Column, String> data = new HashMap<Column, String>();
-	public HashMap<Column, Location> locData = new HashMap<Column, Location>();
+	public HashMap<Column, String> locData = new HashMap<Column, String>();
+	public HashMap<Column, Location> textData = new HashMap<Column, Location>();
 
 	
 	public Record(int id, float latitude, float longitude, String twitter_user_location, String twitter_user_lang)
@@ -37,84 +37,147 @@ public class Record
 	
 	
 
-	
+//	public String getUpdateStatement()
+//	{
+//		
+//		String tempStatement = "UPDATE datasift_results SET "; 
+//
+//		ArrayList<Column> tempColumn = new ArrayList<Column>();
+//		
+//		int i = 0;
+//		for(Entry<Column, String> entry : locData.entrySet())
+//		{
+//			String value = entry.getValue();
+//			Column key = entry.getKey();
+//			
+////			//if(locMapper.standardFormatMap.containsKey(value))
+////			//	value = locMapper.standardFormatMap.get(value);
+//			
+//		
+//			
+//
+//			if(value.equals("united states") || value.equals("us"))
+//				tempStatement += key + "='" + "United States" + "'";
+//			else
+//				tempStatement += key + "='" + value.replace("'", "''") + "'";
+//			
+//			tempColumn.add(key);
+//			
+//			if(i++ < locData.size() - 1)
+//				tempStatement += ",";
+//			tempStatement += " ";
+//			
+//			
+//		}	
+//		
+//		
+//		int j = 0;
+//		if(i == 0)
+//		{
+//			
+//			for(Entry<Column, Location> entry : textData.entrySet())
+//			{
+//				String value = entry.getValue().outName;
+//				Column key = entry.getKey();
+//				
+//				
+//				
+//				if(tempColumn.contains(key))// || key != Column.country)// remove this?
+//					continue;
+//				
+//	//			if(locMapper.standardFormatMap.containsKey(value))
+//	//				value = locMapper.standardFormatMap.get(value);
+//				
+//				if(value.equals("us") && key == Column.country)
+//					tempStatement += key + "='" + "United States" + "'";
+//				else
+//					tempStatement += key + "='" + value.replace("'", "''") + "'";
+//				
+//				
+//				if(j++ < textData.size() - 1)
+//					tempStatement += ",";
+//				tempStatement += " ";
+//			}
+//			
+//		}
+//
+//		
+//		
+//		
+//		if(j == 0 && i == 0)
+//			tempStatement += "country='NONE' ";
+//		
+//
+//		
+//		return  tempStatement + "WHERE id=" + id + "; ";
+//		
+//		
+//	}
+	final String countryNone =  "'NONE'";
 	public String getUpdateStatement()
 	{
 		
-		String tempStatement = "UPDATE datasift_results SET "; 
+		String country = countryNone;
+		String state = "NULL";
+		String city = "NULL";
+		String zip = "NULL";
 
-		ArrayList<Column> tempColumn = new ArrayList<Column>();
 		
-		int i = 0;
-		for(Entry<Column, String> entry : data.entrySet())
+		for(Entry<Column, String> entry : locData.entrySet())
 		{
-			String value = entry.getValue();
 			Column key = entry.getKey();
+			String value = entry.getValue();
 			
-//			//if(locMapper.standardFormatMap.containsKey(value))
-//			//	value = locMapper.standardFormatMap.get(value);
-			
-		
-//			if(key != Column.country)
-//				continue;
-			
-
-			if(value.equals("united states"))
-				tempStatement += key + "='" + "United States" + "'";
-			else
-				tempStatement += key + "='" + value.replace("'", "''") + "'";
-			
-			tempColumn.add(key);
-			
-			if(i++ < data.size() - 1)
-				tempStatement += ",";
-			tempStatement += " ";
-			
-			
-		}	
-		
-		
-		int j = 0;
-		if(i == 0)
-		{
-			
-			for(Entry<Column, Location> entry : locData.entrySet())
+	
+			if(key == Column.country && country.equals(countryNone))
 			{
-				String value = entry.getValue().outName;
-				Column key = entry.getKey();
-				
-				
-				
-				if(tempColumn.contains(key))// || key != Column.country)// remove this?
-					continue;
-				
-	//			if(locMapper.standardFormatMap.containsKey(value))
-	//				value = locMapper.standardFormatMap.get(value);
-				
-				if(value.equals("us") && key == Column.country)
-					tempStatement += key + "='" + "United States" + "'";
-				else
-					tempStatement += key + "='" + value.replace("'", "''") + "'";
-				
-				
-				if(j++ < locData.size() - 1)
-					tempStatement += ",";
-				tempStatement += " ";
+				country = "'" + value + "'";
+			}
+			else if(key == Column.state_province && state.equals("NULL"))
+			{
+				state = "'" + value + "'";
+			}
+			else if(key == Column.city && city.equals("NULL"))
+			{
+				city = "'" + value + "'";
+			}
+			else if(key == Column.postal_code && zip.equals("NULL"))
+			{
+				zip = "'" + value + "'";
 			}
 			
 		}
+		
+		for(Entry<Column, Location> entry : textData.entrySet())
+		{
+			Column key = entry.getKey();
+			String value = entry.getValue().outName;
+			
+	
+			if(key == Column.country && country.equals(countryNone))
+			{
+				country = "'" + value + "'";
+			}
+			else if(key == Column.state_province && state.equals("NULL"))
+			{
+				state = "'" + value + "'";
+			}
+			else if(key == Column.city && city.equals("NULL"))
+			{
+				city = "'" + value + "'";
+			}
+			else if(key == Column.postal_code && zip.equals("NULL"))
+			{
+				zip = "'" + value + "'";
+			}
+			
+		}
+			
 
-		
-		
-		
-		if(j == 0 && i == 0)
-			tempStatement += "country='NONE' ";
+		String sendString = "UPDATE datasift_results SET country=" + country + " , state_province=" + state + " , city=" + city + " , postal_code=" + zip + " WHERE id=" + id + "; ";
 		
 
-		
-		return  tempStatement + "WHERE id=" + id + "; ";
-		
-		
+		return sendString;
 	}
 	
 	public String toString()

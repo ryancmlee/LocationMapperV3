@@ -6,4 +6,7 @@
 .project
 .settings/
 *.log
-data/
+
+data/*
+!data/text/*
+data/text/MasterOut.txt

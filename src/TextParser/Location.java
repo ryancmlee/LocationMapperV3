@@ -15,6 +15,7 @@ public class Location
 	public String stateCode = "";
 	public String cityCode = "";
 
+	
 	public long population = 0;
 
 	public ArrayList<String> matchNames = new ArrayList<String>();
@@ -24,7 +25,9 @@ public class Location
 	public Column column;
 
 
-
+	public String geoKey = null;
+	public String geoNameID = null;
+	
 	private void doConstruction(String country, String state, String city, String outName, long population, Column column, HashSet<String> matchNames)
 	{
 		
@@ -43,7 +46,8 @@ public class Location
 		if(matchNames != null)
 		{
 			for(String string : matchNames)
-				this.matchNames.add(TextParser.makeSuperNice(string));
+				if(string.equals("_") == false)
+					this.matchNames.add(TextParser.makeSuperNice(string));
 		}
 	
 	}
@@ -72,7 +76,7 @@ public class Location
 			String countryCode = strings[0];
 			String stateCode = strings[1];
 			String cityCode = strings[2];
-			long population = TextParser.getPop(strings[5]);
+			long population = TextParser.getLong(strings[5]);
 			Column column = Column.valueOf(strings[4]);
 			HashSet<String> matchNames = new HashSet<String>();
 			
@@ -98,15 +102,15 @@ public class Location
 	
 	public String getKey()
 	{
-		return countryCode + stateCode + cityCode;
+		return countryCode + "." + stateCode + "." + cityCode;
 	}
 	public String getStateKey()
 	{
-		return countryCode + stateCode + "_";
+		return countryCode + "."  + stateCode + "."  + "_";
 	}
 	public String getCountryKey()
 	{
-		return countryCode + "_" + "_";
+		return countryCode + "."  + "_" + "."  + "_";
 	}
 
 	
@@ -128,6 +132,8 @@ public class Location
 		for(String string : this.matchNames)
 			data += string + ","; 
 
+		data = data.substring(0, data.length() - 1);
+		
 		return data;
 	}
 }

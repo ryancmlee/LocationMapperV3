@@ -126,14 +126,14 @@ public class LocationMapper
 			return;
 		}
 		
+		
 	
 		//load textParser
 		TextParser textParser = new TextParser();
 		textParser.loadText(dataDir);
 		textParser.CreateMasterOut(dataDir);
-
+		Log.doConsolePrint = true;
 	
-		
 		
 		//build partmap
 		partManager = new PartManager(textParser.allLoc, "[, ]");
@@ -143,7 +143,7 @@ public class LocationMapper
 
 		//load LatLongParser
 		latLongParser = new LatLongParser();
-		latLongParser.loadData(dataDir);
+		//latLongParser.loadData(dataDir);
 		
 	
 		
@@ -364,16 +364,7 @@ public class LocationMapper
 	
 	
 	
-	public String makeNice(String string)
-	{
-		if(string == null)
-			return "";
-		
-		string = string.trim();
-		string = string.toLowerCase();
-		
-		return string;
-	}
+	
 	
 	
 	public static void Exit(int status)

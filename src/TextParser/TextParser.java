@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.joda.time.DateTime;
+
 import LatLongParser.Column;
 import LocationMapper.Log;
 
@@ -279,7 +281,7 @@ public class TextParser
 		String city = strings[2];
 
 		long pop = getLong(strings[4]);
-		if(pop < minPop)
+		if(pop < MinPop)
 			return null;
 
 
@@ -292,7 +294,7 @@ public class TextParser
 
 
 
-	
+	public static HashSet<String> rejectedMatchWords = new HashSet<String>();
 	
 	
 	//key _ _ _,  location
@@ -302,7 +304,7 @@ public class TextParser
 	static HashMap<String, String> makeNiceList = new HashMap<String, String>();
 
 	String blank = "_";
-	long minPop = 1;
+	public static long MinPop = 1;
 
 	
 	public void close()
@@ -368,24 +370,34 @@ public class TextParser
 			i += 2;
 		}
 		
-		
-		
+		 
 		ArrayList<GeoBuilder> geoBuilders = new ArrayList<GeoBuilder>();
 		tempFileLoc = dataDir + "/text/raw/cities1000.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, true))
 		{
 			GeoBuilder gb = new GeoBuilder(string);
-			
-			if(gb.population < minPop)
+		
+			if(gb.population < MinPop)
 				continue;
-			
-	
+		
 			
 			geoBuilders.add(gb);
 		}
 		geoBuilders.trimToSize();
 		Collections.sort(geoBuilders);
+		
+		
+		tempFileLoc = dataDir + "/text/rejectedMatchWords_" + new DateTime().toString().replaceAll(":", ".") + ".txt";
+		Log.log(Log.tab + Log.tab + "Writing " + tempFileLoc);
+		ArrayList<String> tempList = new ArrayList<String>();
+		tempList.addAll(rejectedMatchWords);
+		tempList.trimToSize();
+		Collections.sort(tempList);
+		this.writeText(tempFileLoc, null, tempList);
+		Log.log(Log.tab + Log.tab + tempList.size() + " rejected matchWords");
+		
+		
 		
 		HashMap<String, AdminBuilder>  adminBuilder1 = new HashMap<String, AdminBuilder>();
 		tempFileLoc = dataDir + "/text/raw/admin1CodesASCII.txt";
@@ -490,51 +502,6 @@ public class TextParser
 		
 		
 //		
-//		
-//		for(GeoBuilder gb : geoBuilders)
-//		{
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			
-//			String stateName = null;
-//			String state = gb.admin1;
-//			
-//			if(adminBuilder1.containsKey(gb.getKey()))
-//			{
-//				String key = gb.getKey();
-//				stateName = adminBuilder1.get(key).nameASCII;
-//				state = adminBuilder1.get(key).region;
-//			}
-//			else if(adminBuilder2.containsKey(gb.getKey2()))
-//			{
-//				String key = gb.getKey2();
-//				stateName = adminBuilder2.get(key).nameASCII;
-//				state = adminBuilder2.get(key).sub;
-//			}
-//			
-//			if(stateName != null && allLoc.containsKey(gb.countryCode + "." + state + "." + "_") == false)
-//			{
-//				Location tempLoc = new Location(stateName, gb.countryCode, state, "_", getLong(gb.populationString), Column.city, gb.matchNames);//(String outName, String country, String state, String city, long population, Column column, String otherName)
-//				tempLoc.geoKey = gb.getKey();
-//				tempLoc.geoNameID = gb.geonameid;
-//				addToAllLoc(tempLoc);
-//			}
-//			
-//		}
-//		
-//		
-//		
-		
-//		
 //		tempFileLoc = dataDir + "/text/raw/usaStates.txt";
 //		Log.log(Log.tab + "Loading " + tempFileLoc);
 //		for(String string : LoadTextFile(tempFileLoc, null, false))
@@ -612,97 +579,96 @@ public class TextParser
 
 		Log.log("Proccessing text data for MasterOut");
 
-//
-//		tempFileLoc = dataDir + "/text/keyRemove.txt";
-//		Log.log(Log.tab + "Proccessing " + tempFileLoc);
-//		for(String string : LoadTextFile(tempFileLoc, null, false))
-//		{
-//			String[] strings = string.split("\t");
-//
-//			if(strings.length == 1)// remove whole location it
-//			{
-//				String key = strings[0];
-//
-//				Location tempLocation = this.allLoc.remove(key);
-//				if(tempLocation == null)
-//					Log.log("ERROR could not remove location: " + key + " key not found. either wrong key or target location does not exist", true);
-//
-//			}
-//			if(strings.length == 2) // remove matchname
-//			{
-//				String key = strings[0];
-//				String[] values = strings[1].split(",");
-//
-//				Location tempLocation = this.allLoc.get(key);
-//
-//				if(tempLocation != null)
-//				{
-//					for(String value : values)
-//					{
-//						tempLocation.matchNames.remove(value);				
-//					}
-//				}
-//				else
-//					Log.log("ERROR could not remove matchNames from location: " + key + "key not found. either wrong key or target location does not exist", true);
-//
-//			}
-//
-//		}
-//
-//
-//		tempFileLoc = dataDir + "/text/keyAdd.txt";
-//		Log.log(Log.tab + "Proccessing " + tempFileLoc);
-//		for(String string : LoadTextFile(tempFileLoc, null, false))
-//		{
-//			String[] strings = string.split("\t");
-//
-//
-//			if(strings.length == 7)
-//			{
-//				Location tempLoc = null;
-//				try
-//				{
-//					tempLoc = new Location(string);
-//				}
-//				catch(Exception e)
-//				{
-//					Log.log(Log.tab + "Unabble to add Location from keyAdd.txt: "+ string , e);
-//					continue;
-//				}
-//
-//				addToAllLoc(tempLoc);
-//				//				if(tempLoc != null)
-//				//				{
-//				//					noDups.put(tempLoc.getKey(), tempLoc);
-//				//				}
-//			}
-//			else if(strings.length == 2) // add matchname
-//			{
-//				String key = strings[0];
-//				String[] values = strings[1].split(",");
-//
-//				Location tempLoc = allLoc.get(key);
-//				if(tempLoc == null)
-//				{
-//					Log.log(Log.tab + "addKey: unable to find Location with key: " + key + ". no matchNames have been added for this entry", true);
-//					continue;
-//				}
-//
-//				for(String value : values)
-//				{
-//					//value = makeNice(value);
-//					if(value.equals("") == false && tempLoc.matchNames.contains(value) == false)
-//					{
-//						tempLoc.matchNames.add(value);
-//					}
-//				}
-//			}
-//			else
-//				Log.log(Log.tab + "addKey: Wrong number of Delimeters:" + strings.length + ".  " + string, true);
-//		}
-//
-//
-//
+
+		tempFileLoc = dataDir + "/text/keyRemove.txt";
+		Log.log(Log.tab + "Proccessing " + tempFileLoc);
+		for(String string : LoadTextFile(tempFileLoc, null, false))
+		{
+			String[] strings = string.split("\t");
+
+			if(strings.length == 1)// remove whole location it
+			{
+				String key = strings[0];
+
+				Location tempLocation = this.allLoc.remove(key);
+				if(tempLocation == null)
+					Log.log("ERROR could not remove location: " + key + " key not found. either wrong key or target location does not exist", true);
+
+			}
+			if(strings.length == 2) // remove matchname
+			{
+				String key = strings[0];
+				String[] values = strings[1].split(",");
+
+				Location tempLocation = this.allLoc.get(key);
+
+				if(tempLocation != null)
+				{
+					for(String value : values)
+					{
+						tempLocation.matchNames.remove(value);				
+					}
+				}
+				else
+					Log.log("ERROR could not remove matchNames from location: " + key + "key not found. either wrong key or target location does not exist", true);
+
+			}
+
+		}
+
+
+		tempFileLoc = dataDir + "/text/keyAdd.txt";
+		Log.log(Log.tab + "Proccessing " + tempFileLoc);
+		for(String string : LoadTextFile(tempFileLoc, null, false))
+		{
+			String[] strings = string.split("\t");
+
+
+			if(strings.length == 7)
+			{
+				Location tempLoc = null;
+				try
+				{
+					tempLoc = new Location(string);
+				}
+				catch(Exception e)
+				{
+					Log.log(Log.tab + "Unabble to add Location from keyAdd.txt: "+ string , e);
+					continue;
+				}
+
+				addToAllLoc(tempLoc);
+				//				if(tempLoc != null)
+				//				{
+				//					noDups.put(tempLoc.getKey(), tempLoc);
+				//				}
+			}
+			else if(strings.length == 2) // add matchname
+			{
+				String key = strings[0];
+				String[] values = strings[1].split(",");
+
+				Location tempLoc = allLoc.get(key);
+				if(tempLoc == null)
+				{
+					Log.log(Log.tab + "addKey: unable to find Location with key: " + key + ". no matchNames have been added for this entry", true);
+					continue;
+				}
+
+				for(String value : values)
+				{
+					//value = makeNice(value);
+					if(value.equals("") == false && tempLoc.matchNames.contains(value) == false)
+					{
+						tempLoc.matchNames.add(value);
+					}
+				}
+			}
+			else
+				Log.log(Log.tab + "addKey: Wrong number of Delimeters:" + strings.length + ".  " + string, true);
+		}
+
+
 
 
 
@@ -720,10 +686,23 @@ public class TextParser
 	}
 
 
-
+	public static String makeNice(String string)
+	{
+		if(string == null)
+			return "";
+		
+		string = string.trim();
+		string = string.toLowerCase();
+		
+		return string;
+	}
 	
 	public static String makeSuperNice(String string)
 	{
+		if(true)
+			return makeNice(string);
+		
+		
 		if(string == null)
 			return "";
 		

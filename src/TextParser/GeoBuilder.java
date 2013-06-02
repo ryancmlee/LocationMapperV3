@@ -1,11 +1,14 @@
 package TextParser;
 
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import LocationMapper.Log;
+
 public class GeoBuilder extends Builder implements Comparable
 {
-	
+
 	public String geonameid;//          = strings[0];			// integer id of record in geonames database
 	public String name;//               = strings[1];			// name of geographical point (utf8) varchar(200)
 	public String asciiname;//          = strings[2];			// name of geographical point in plain ascii characters, varchar(200)
@@ -20,43 +23,43 @@ public class GeoBuilder extends Builder implements Comparable
 	public String admin2;//     		  = strings[11];		// code for the second administrative division, a county in the US, see file admin2Codes.txt; varchar(80) 	
 	public String admin3;//      		  = strings[12];		// code for third level administrative division, varchar(20)
 	public String admin4;//      		  = strings[13];		// code for fourth level administrative division, varchar(20)
-   private String populationString;//   = strings[14];		// bigint (8 byte int) 
+	private String populationString;//   = strings[14];		// bigint (8 byte int) 
 	public String elevation;//          = strings[15];		// in meters, integer
 	public String dem;//                = strings[16];		// digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat.
 	public String timezone;//           = strings[17];		// the timezone id (see file timeZone.txt) varchar(40)
 	public String modificationDate;//   = strings[18];		// date of last modification in yyyy-MM-dd format
-	
-	
+
+
 	public HashSet<String> matchNames = new HashSet<String>();
 	public String state = null;
 	public long population = 0;
-	
-	
-	
+
+
+
 	@Override
 	public String getKey() 
 	{
 		return countryCode + "." + admin1 + "." + asciiname;
 	}
-	
+
 
 	public String getKey2() 
 	{
 		return countryCode + "." + admin2 + "." + asciiname;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return countryCode + " " + admin1 + " " + admin2 + " " + asciiname + "\n";
 	}
-	
-	
-	
+
+
+
 	public GeoBuilder(String data)
 	{
 		String[] strings = data.split("\t");
-		
+
 		this.geonameid          = normalize(strings[0]);		// integer id of record in geonames database
 		this.name               = normalize(strings[1]);		// name of geographical point (utf8) varchar(200)
 		this.asciiname          = normalize(strings[2]);		// name of geographical point in plain ascii characters, varchar(200)
@@ -76,29 +79,47 @@ public class GeoBuilder extends Builder implements Comparable
 		this.dem                = normalize(strings[16]);		// digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat.
 		this.timezone           = normalize(strings[17]);		// the timezone id (see file timeZone.txt) varchar(40)
 		this.modificationDate   = normalize(strings[18]);		// date of last modification in yyyy-MM-dd format
-		
+
 		this.population = TextParser.getLong(populationString);
+
+		if(population < TextParser.MinPop)
+			return;
+
+	
 		
 		
 		strings = alternatenames.split(",");
-		
+
 		for	(String string : strings)
-			this.matchNames.add(string);
-		
+		{
+
+			if(string.equals("_"))
+				continue;
+
+			string.replace("'", "");
+			
+			if(string.matches("[A-Za-z0-9,â€§=ÅÄÃŸƒ¡©` \\.\\-]+"))
+			{				
+				this.matchNames.add(string);
+			}
+			else
+				TextParser.rejectedMatchWords.add(string);
+		}
+
 		this.matchNames.add(name);
 		this.matchNames.add(asciiname);
-		
+
 	}
-	
-	
-	
+
+
+
 	@Override
 	public int compareTo(Object arg0) 
 	{
 		return toString().compareTo(arg0.toString());
 	}
-	
-	
-	
-	
+
+
+
+
 }

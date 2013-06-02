@@ -35,7 +35,7 @@ public class Location
 		if(temps.length > 1)
 			outName = temps[0];
 		
-		this.outName = TextParser.makeSuperNice(outName);
+		this.outName = TextParser.makeSuperNice(outName).replace("'", "");
 		this.countryCode = TextParser.makeSuperNice(country);
 		this.stateCode = TextParser.makeSuperNice(state);
 		this.cityCode =  TextParser.makeSuperNice(city);
@@ -124,6 +124,7 @@ public class Location
 
 		data += this.countryCode + "\t";
 		data += this.stateCode + "\t";
+		data += this.geoNameID + "\t";
 		data += this.cityCode + "\t";
 		data += this.outName + "\t";
 		data += this.column + "\t";

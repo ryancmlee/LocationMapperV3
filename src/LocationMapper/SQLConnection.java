@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SQLConnection 
@@ -53,30 +55,32 @@ public class SQLConnection
 	
 	
 	
-	String sendString = "";
+	//String sendString = "";
+	ArrayList<String> sendStrings = new ArrayList<String>();
 	
+	
+	
+	private void doBinaryUpdate()
+	{
+		
+		
+		
+	}
 	
 
 	public boolean updateRecord(Record record)
 	{
 		
 		String tempString = record.getUpdateStatement();
-		sendString += tempString;
+		sendStrings.add(tempString);
 		
 		parseCount++;
 		if(parseCount % this.batchCount == 0)
 		{
-			try
-			{
-				flush();
-				Log.log("ParseCount = " + parseCount);
-			}
-			catch (Exception e)
-			{
-				Log.log("ERROR: stmt.executeUpdate(sendString) threw error: " + e + sendString);
-				//Log.log(sendString);
-			}
-			sendString = "";
+			
+			flush(sendStrings);
+			Log.log("ParseCount = " + parseCount);
+			sendStrings.clear();
 			
 		}
 		
@@ -84,23 +88,74 @@ public class SQLConnection
 	}
 	
 	
-	
-	
-	
-	public void flush() throws SQLException
+	public String printString()
 	{
-		//parseCount = 0;
+		String sendString = "";
+		for(String string : sendStrings)
+			sendString += string + "\n";
+		
+		return sendString;
+	}
+	
+	
+	
+	public void flush(List<String> stringsToBeSent)// throws SQLException
+	{
 
-		Statement stmt = connection.createStatement();
-		stmt.executeUpdate(sendString);
-		sendString = "";
+
+		Statement stmt = null;
+		try {
+			stmt = connection.createStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			Log.log("error:  stmt = connection.createStatement();", e1);
+			LocationMapper.Exit(5);
+		}
+		
+		
+		String sendString = "";
+		
+		for(String string : stringsToBeSent)
+			sendString += string;
+		
+		
+		
+		
+		try
+		{
+			stmt.executeUpdate(sendString);
+		}
+		catch (SQLException e)
+		{
+			
+			if(stringsToBeSent.size() == 1)
+			{
+				Log.log("ERRROR: bad send String: " + stringsToBeSent.get(0));
+				stringsToBeSent.clear();
+				return;
+			}
+			
+			List<String> list1 = new ArrayList<String>(stringsToBeSent.subList(0, stringsToBeSent.size() / 2));
+			List<String> list2 = new ArrayList<String>(stringsToBeSent.subList(stringsToBeSent.size() / 2, stringsToBeSent.size()));
+	
+			flush(list1);
+			flush(list2);
+
+		}
+		
+		
+		
+		
+		
+		
+		stringsToBeSent.clear();
 
 	}
 	
 	
 	public void close() throws SQLException
 	{
-		flush();
+		flush(sendStrings);
 		connection.close();
 	}
 	

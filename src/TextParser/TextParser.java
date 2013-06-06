@@ -10,9 +10,11 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -223,48 +225,90 @@ public class TextParser
 
 	private Location fromCDHStates(String data, int oNameIndex, int countryAndStateIndex, int popIndex, Column column, int otherNamesIndex) 
 	{
-
+		
+		
+		
 		String[] strings = data.split("\t");
-
+		
 		if(strings.length <= 2)
 			return null;
-
-		String oName = strings[oNameIndex].trim();
-		if(oName.equals(""))
-			return null;
-
-
-
-		String[] tempStateAndCountry = strings[countryAndStateIndex].trim().split("-");
+		
+		
+		
+		
+		String[] tempStateAndCountry = strings[1].trim().split("-");
 		String country = tempStateAndCountry[0];
 		String state =  tempStateAndCountry[1];
 		String city = blank;
-
-
-		if(country.equals("us")) //-------------------------------------------SPECIAL FOR US, NOT TO ADD IT TWICE
-			return null;
-
-
-
+		
+		String oName = state;
+		
+	
 		long pop = 0;
-		if(popIndex != -1)
-			pop = getLong(strings[popIndex]);
-
+		
+		
 		HashSet<String> matchNames = new  HashSet<String>();
-
-		matchNames.add(oName);
-
-
-
-		if(strings.length > 3)
+		String officialName = strings[2].trim();
+		if(officialName.equals(""))
+			return null;
+		else
+			TextParser.addMatchNames(officialName, matchNames);
+		
+		
+		if(strings.length >= 4)
 		{
-			String tempString = strings[otherNamesIndex].trim();
-			String[] tempStrings = tempString.split(",");
-			for(String string : tempStrings)
-				matchNames.add(string);
+			strings = strings[3].split(",");
+			
+			TextParser.addMatchNames(strings, matchNames);
 		}
-
+		
+		
+		
+		
+		
 		return new Location(oName, country, state, city, pop, column, matchNames);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+//
+//		String[] strings = data.split("\t");
+//
+//		if(strings.length <= 2)
+//			return null;
+//
+//		String oName = strings[oNameIndex].trim();
+//		if(oName.equals(""))
+//			return null;
+//
+//
+//
+//		String[] tempStateAndCountry = strings[countryAndStateIndex].trim().split("-");
+//		String country = tempStateAndCountry[0];
+//		String state =  tempStateAndCountry[1];
+//		String city = blank;
+//
+//
+//		if(country.equals("us")) //-------------------------------------------SPECIAL FOR US, NOT TO ADD IT TWICE
+//			return null;
+//
+//
+//
+//		long pop = 0;
+//		if(popIndex != -1)
+//			pop = getLong(strings[popIndex]);
+//
+//		HashSet<String> matchNames = new  HashSet<String>();
+//
+//		matchNames.add(oName);
+//
+//
+//
+//		if(strings.length > 3)
+//		{
+//			String tempString = strings[otherNamesIndex].trim();
+//			String[] tempStrings = tempString.split(",");
+//			for(String string : tempStrings)
+//				matchNames.add(string);
+//		}
+
+		
 	}
 
 	private Location fromWorldCitiesPop(String data)
@@ -293,9 +337,89 @@ public class TextParser
 	}
 
 
-
-	public static HashSet<String> rejectedMatchWords = new HashSet<String>();
 	
+	//SE.02	Blekinge	Blekinge	2721357
+	private HashMap<String, String[]> loadFIPStoNameAdmin(String data)
+	{
+		HashMap<String, String[]> FIPStoNameMap = new HashMap<String, String[]>();
+		
+		String[] strings = data.split("\t");
+		
+		String[] temp = new String[2];
+		temp[0] =  strings[1];
+		temp[1] =  strings[2];
+		
+		
+		String CountryAndStateCode = strings[0];
+	
+		FIPStoNameMap.put(CountryAndStateCode, temp);
+		
+		return FIPStoNameMap;
+	}
+
+	
+	
+	
+	
+//	COUNTRY NAME||ISO 3166-2 SUB-DIVISION/STATE CODE||ISO 3166-2 SUBDIVISION/STATE NAME||ISO 3166-2 PRIMARY LEVEL NAME||SUBDIVISION/STATE ALTERNATE NAMES
+//	Afghanistan[0]	AF-BDS[1]	Badakhshān[2]	Province[3]	Badaẖšan[4]
+	private HashMap<String, String> loadNameToISOcdh( String data)
+	{
+		HashMap<String, String> nameToISOmap = new  HashMap<String, String>();
+
+		String[] strings = data.split("\t");
+		if(strings.length <= 2)		//no isoName so no point, skip it
+			return nameToISOmap;
+		
+		String[] split = strings[1].split("-");
+		if(split.length <= 1)		//no stateCode so no point, skip it
+			return nameToISOmap;
+		
+		
+		String countryName = strings[0];
+		String countryCode = split[0];
+		String stateCode = split[1];
+		String isoName = strings[2];
+		String levelName = null;
+		if(strings.length > 3)			//has 
+		{
+			levelName = strings[3];
+			
+			
+			if(levelNames.containsKey(levelName))
+				levelNames.put(levelName, levelNames.get(levelName) + 1);
+			else
+				levelNames.put(levelName, 1);
+			
+		}
+		
+		nameToISOmap.put(isoName, countryCode + "."+ stateCode);
+		
+
+		if(strings.length > 4)			//has 
+		{
+			for(String string : strings[4].split(","))
+				nameToISOmap.put(string, stateCode);
+		}
+		
+		ISOtoCountryNameMmap.put(countryCode, countryName);
+		
+		
+		return nameToISOmap;
+	}
+
+	
+	HashMap<String, String> ISOtoCountryNameMmap = new  HashMap<String, String>();
+	
+	
+	
+	HashMap<String, String[]> FIPStoNameMap = new HashMap<String, String[]>();
+	HashMap<String, String> nameToISOmap = new  HashMap<String, String>();
+	
+	
+	public static HashMap<String, Integer> levelNames = new HashMap<String, Integer>();
+	public static HashSet<String> rejectedMatchWords = new HashSet<String>();
+	public static String allowedCharacters = "[A-Za-z0-9,â€§=ÅÄÃŸƒ¡©` \\.\\-]+";
 	
 	//key _ _ _,  location
 	public HashMap<String, Location> allLoc = new HashMap<String, Location>();
@@ -304,6 +428,7 @@ public class TextParser
 	static HashMap<String, String> makeNiceList = new HashMap<String, String>();
 
 	String blank = "_";
+	//String[] allowedLevelNames = {"principality", "Territory", "prefecture" , "State" , "Province" , "Region" , "state" , };
 	public static long MinPop = 1;
 
 	
@@ -314,6 +439,30 @@ public class TextParser
 	}
 	
 
+	
+	public static void addMatchNames(String[] strings, HashSet<String> matchNames)
+	{
+		for	(String string : strings)
+			addMatchNames(string, matchNames);
+	}
+	
+	public static void addMatchNames(String string, HashSet<String> matchNames)
+	{
+		if(string.equals("_") || string.equals(" "))
+			return;
+
+		string = string.replace("'", "").replace("�", "");
+		
+		if(string.matches(TextParser.allowedCharacters))
+		{				
+			matchNames.add(string);
+		}
+		else
+			TextParser.rejectedMatchWords.add(string);
+
+		
+	}
+	
 	public TextParser()
 	{
 	}
@@ -360,166 +509,50 @@ public class TextParser
 
 
 		
-		tempFileLoc = dataDir + "/text/raw/countryAndPop.txt";
-		Log.log(Log.tab + "Loading " + tempFileLoc);
-		ArrayList<String> countryAndPop = LoadTextFile(tempFileLoc, null, false);
-		for(int i = 0; i < countryAndPop.size();)
-		{
-			Location tempLoc = doCountryAndPop(countryAndPop.get(i), countryAndPop.get(i + 1));//(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex) 
-			addToAllLoc(tempLoc);
-			i += 2;
-		}
 		
-		 
-		ArrayList<GeoBuilder> geoBuilders = new ArrayList<GeoBuilder>();
-		tempFileLoc = dataDir + "/text/raw/cities1000.txt";
+		
+		tempFileLoc = dataDir + "/text/raw/nameToISOcdh.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, true))
 		{
-			GeoBuilder gb = new GeoBuilder(string);
-		
-			if(gb.population < MinPop)
-				continue;
-		
-			
-			geoBuilders.add(gb);
+			HashMap<String, String> temp = loadNameToISOcdh(string);
+			nameToISOmap.putAll(temp);
 		}
-		geoBuilders.trimToSize();
-		Collections.sort(geoBuilders);
 		
 		
-		tempFileLoc = dataDir + "/text/rejectedMatchWords_" + new DateTime().toString().replaceAll(":", ".") + ".txt";
-		Log.log(Log.tab + Log.tab + "Writing " + tempFileLoc);
-		ArrayList<String> tempList = new ArrayList<String>();
-		tempList.addAll(rejectedMatchWords);
-		tempList.trimToSize();
-		Collections.sort(tempList);
-		this.writeText(tempFileLoc, null, tempList);
-		Log.log(Log.tab + Log.tab + tempList.size() + " rejected matchWords");
+		String format = "%1$03d";
+
+		
+		
+		ArrayList<String> asdf = new ArrayList<String>();
+		for (String string : levelNames.keySet())
+			asdf.add(String.format(format,levelNames.get(string)) + "=" + string);
+			
+		Collections.sort(asdf);
+		
+		String out = "";
+		
+		for (String string : asdf)
+		{
+			out += string + "\n";
+		}
 		
 		
 		
-		HashMap<String, AdminBuilder>  adminBuilder1 = new HashMap<String, AdminBuilder>();
+		
 		tempFileLoc = dataDir + "/text/raw/admin1CodesASCII.txt";
-		Log.log(Log.tab + "Loading " + tempFileLoc);
-		for(String string : LoadTextFile(tempFileLoc, null, true))
-		{
-			AdminBuilder ab = new AdminBuilder(string);
-			String key = ab.getStateKey();
-			adminBuilder1.put(key, ab);
-		}
-		
-		
-		HashMap<String, AdminBuilder> adminBuilder2 = new HashMap<String, AdminBuilder>();
-		tempFileLoc = dataDir + "/text/raw/admin2Codes.txt";
-		Log.log(Log.tab + "Loading " + tempFileLoc);
-		for(String string : LoadTextFile(tempFileLoc, null, true))
-		{
-			AdminBuilder ab = new AdminBuilder(string);
-			String key = ab.getStateKey();
-			adminBuilder2.put(key, ab);
-		}
-
-		
-		HashSet<String> stateCodes = new HashSet<String>();
-		Log.log(Log.tab + "Building Cities");
-		for(GeoBuilder gb : geoBuilders)
-		{
-		
-			
-			if(gb.admin1.equals("") == false)
-			{
-				gb.state = gb.admin1;
-			}
-//			else if(gb.admin2.equals("") == false)
-//			{
-//				gb.state = gb.admin2;
-//			}
-			else
-				Log.log("error in BUILDING cities");
-			
-			
-			Location tempLoc = new Location(gb.asciiname, gb.countryCode, gb.state, gb.asciiname, gb.population, Column.city, gb.matchNames);//(String outName, String country, String state, String city, long population, Column column, String otherName)
-			tempLoc.geoKey = gb.getKey();
-			tempLoc.geoNameID = gb.geonameid;
-			addToAllLoc(tempLoc);
-			
-			
-			String temp = gb.countryCode + "." + gb.state;
-			stateCodes.add(temp);
-			
-			
-			
-//			
-//			String state = gb.admin1;
-//			
-//			String key = gb.getKey();
-//			String key2 = gb.getKey2();
-//			if(adminBuilder1.containsKey(key))
-//			{
-//				String tempKey = gb.getKey();
-//				state = adminBuilder1.get(tempKey).region;
-//			}
-//			else if(adminBuilder2.containsKey(key2))
-//			{
-//				String tempKey = gb.getKey2();
-//				state = adminBuilder2.get(tempKey).region;
-//			}
-//		
-//			
-//			Location tempLoc = new Location(gb.asciiname, gb.countryCode, state, gb.asciiname, getLong(gb.populationString), Column.city, gb.matchNames);//(String outName, String country, String state, String city, long population, Column column, String otherName)
-//			tempLoc.geoKey = gb.getKey();
-//			tempLoc.geoNameID = gb.geonameid;
-//			addToAllLoc(tempLoc);
-			
-		}
-		
-		
-		
-		
-		
-		
-		Log.log(Log.tab + "Building States");
-		for(String string : stateCodes)
-		{
-			if(adminBuilder1.containsKey(string))
-			{
-				AdminBuilder ab = adminBuilder1.get(string);
-
-				Location tempLoc = new Location(ab.nameASCII, ab.countryCode, ab.region, ab.nameASCII, 0, Column.state_province, ab.nameASCII);//(String outName, String country, String state, String city, long population, Column column, String otherName)
-				tempLoc.geoKey = ab.getKey();
-				tempLoc.geoNameID = ab.geonameid;
-				addToAllLoc(tempLoc);
-			}
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//		
-//		tempFileLoc = dataDir + "/text/raw/usaStates.txt";
-//		Log.log(Log.tab + "Loading " + tempFileLoc);
-//		for(String string : LoadTextFile(tempFileLoc, null, false))
-//		{
-//			Location tempLoc = stndFromStatoids(string, 1,1,5,3, Column.state_province);//(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex) 
-//			addToAllLoc(tempLoc);
-//		}
-//
-//		tempFileLoc = dataDir + "/text/raw/usaCityToState.txt";
 //		Log.log(Log.tab + "Loading " + tempFileLoc);
 //		for(String string : LoadTextFile(tempFileLoc, null, true))
 //		{
-//			Location tempLoc = ParseUSACityToTextString(string);
-//			addToAllLoc(tempLoc);
+//			HashMap<String, String[]> temp = loadFIPStoNameAdmin(string);
+//			FIPStoNameMap.putAll(temp);
 //		}
-//
-//
-//
+		
+		
+		
+		
+		
+//		
 //		tempFileLoc = dataDir + "/text/raw/countryAndPop.txt";
 //		Log.log(Log.tab + "Loading " + tempFileLoc);
 //		ArrayList<String> countryAndPop = LoadTextFile(tempFileLoc, null, false);
@@ -529,8 +562,40 @@ public class TextParser
 //			addToAllLoc(tempLoc);
 //			i += 2;
 //		}
-//
-//
+//		
+//		 
+//		
+////		
+////
+////		tempFileLoc = dataDir + "/text/raw/usaStates.txt";
+////		Log.log(Log.tab + "Loading " + tempFileLoc);
+////		for(String string : LoadTextFile(tempFileLoc, null, false))
+////		{
+////			Location tempLoc = stndFromStatoids(string, 1,1,5,3, Column.state_province);//(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex) 
+////			addToAllLoc(tempLoc);
+////		}
+////
+////		tempFileLoc = dataDir + "/text/raw/usaCityToState.txt";
+////		Log.log(Log.tab + "Loading " + tempFileLoc);
+////		for(String string : LoadTextFile(tempFileLoc, null, true))
+////		{
+////			Location tempLoc = ParseUSACityToTextString(string);
+////			addToAllLoc(tempLoc);
+////		}
+////
+////
+//////
+//////		tempFileLoc = dataDir + "/text/raw/countryAndPop.txt";
+//////		Log.log(Log.tab + "Loading " + tempFileLoc);
+//////		ArrayList<String> countryAndPop = LoadTextFile(tempFileLoc, null, false);
+//////		for(int i = 0; i < countryAndPop.size();)
+//////		{
+//////			Location tempLoc = doCountryAndPop(countryAndPop.get(i), countryAndPop.get(i + 1));//(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex) 
+//////			addToAllLoc(tempLoc);
+//////			i += 2;
+//////		}
+////
+////
 //		tempFileLoc = dataDir + "/text/raw/cdhStates.txt";
 //		Log.log(Log.tab + "Loading " + tempFileLoc);
 //		for(String string : LoadTextFile(tempFileLoc, null, true))
@@ -538,31 +603,187 @@ public class TextParser
 //			Location tempLoc = fromCDHStates(string, 2, 1, -1, Column.state_province, 3);//(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex) 
 //			addToAllLoc(tempLoc);
 //		}
-//
-//
-//
-//		int i = 0, j = 0;
-//		tempFileLoc = dataDir + "/text/raw/worldcitiespop.txt";
-//		Log.log(Log.tab + "Loading " + tempFileLoc);
-//		ArrayList<String> tempWorldCitiesPopList = LoadTextFile(tempFileLoc, null, true);
-//		int tempThing = tempWorldCitiesPopList.size() / 10; 
-//		for(String string : tempWorldCitiesPopList)
-//		{
-//			if(j++ % tempThing == 0)
-//			Log.log(Log.tab + Log.tab + j + "\t" + string);
+////
+////
+////
+////		int i = 0, j = 0;
+////		tempFileLoc = dataDir + "/text/raw/worldcitiespop.txt";
+////		Log.log(Log.tab + "Loading " + tempFileLoc);
+////		ArrayList<String> tempWorldCitiesPopList = LoadTextFile(tempFileLoc, null, true);
+////		int tempThing = tempWorldCitiesPopList.size() / 10; 
+////		for(String string : tempWorldCitiesPopList)
+////		{
+////			if(j++ % tempThing == 0)
+////			Log.log(Log.tab + Log.tab + j + "\t" + string);
+////		
+////			Location tempLoc = fromWorldCitiesPop(string);
+////			
+////
+////			if(tempLoc != null)// tempLoc is null if  --> && tempLoc.population < minPop)
+////				continue;
+////			
+////			i++;
+////			addToAllLoc(tempLoc);
+////			
+////		}
+////		Log.log(Log.tab + Log.tab + i + "\tPotential Cities");
+////
+////		
 //		
-//			Location tempLoc = fromWorldCitiesPop(string);
-//			
-//
-//			if(tempLoc != null)// tempLoc is null if  --> && tempLoc.population < minPop)
+//		
+//		
+//		
+//		ArrayList<GeoBuilder> geoBuilders = new ArrayList<GeoBuilder>();
+//		tempFileLoc = dataDir + "/text/raw/cities1000.txt";
+//		Log.log(Log.tab + "Loading " + tempFileLoc);
+//		for(String string : LoadTextFile(tempFileLoc, null, true))
+//		{
+//			GeoBuilder gb = new GeoBuilder(string);
+//		
+//			if(gb.population < MinPop)
 //				continue;
+//		
 //			
-//			i++;
-//			addToAllLoc(tempLoc);
-//			
+//			geoBuilders.add(gb);
 //		}
-//		Log.log(Log.tab + Log.tab + i + "\tPotential Cities");
-
+//		geoBuilders.trimToSize();
+//		Collections.sort(geoBuilders);
+//		
+//		
+//		tempFileLoc = dataDir + "/text/rejectedMatchWords.txt";
+//		Log.log(Log.tab + Log.tab + "Writing " + tempFileLoc);
+//		ArrayList<String> tempList = new ArrayList<String>();
+//		tempList.addAll(rejectedMatchWords);
+//		tempList.trimToSize();
+//		Collections.sort(tempList);
+//		this.writeText(tempFileLoc, null, tempList);
+//		Log.log(Log.tab + Log.tab + tempList.size() + " rejected matchWords");
+//		
+//		
+//		
+//		HashMap<String, AdminBuilder>  adminBuilder1 = new HashMap<String, AdminBuilder>();
+//		tempFileLoc = dataDir + "/text/raw/admin1CodesASCII.txt";
+//		Log.log(Log.tab + "Loading " + tempFileLoc);
+//		for(String string : LoadTextFile(tempFileLoc, null, true))
+//		{
+//			AdminBuilder ab = new AdminBuilder(string);
+//			String key = ab.getStateKey();
+//			adminBuilder1.put(key, ab);
+//		}
+//		
+//		
+////		HashMap<String, AdminBuilder> adminBuilder2 = new HashMap<String, AdminBuilder>();
+////		tempFileLoc = dataDir + "/text/raw/admin2Codes.txt";
+////		Log.log(Log.tab + "Loading " + tempFileLoc);
+////		for(String string : LoadTextFile(tempFileLoc, null, true))
+////		{
+////			AdminBuilder ab = new AdminBuilder(string);
+////			String key = ab.getStateKey();
+////			adminBuilder2.put(key, ab);
+////		}
+//
+//		
+//		HashSet<String> stateCodes = new HashSet<String>();
+//		Log.log(Log.tab + "Building Cities");
+//		for(GeoBuilder gb : geoBuilders)
+//		{
+//		
+//			
+//			if(gb.admin1.equals("") == false)
+//			{
+//				gb.state = gb.admin1;
+//			}
+////			else if(gb.admin2.equals("") == false)
+////			{
+////				gb.state = gb.admin2;
+////			}
+//			else
+//				Log.log("error in BUILDING cities");
+//			
+//			
+//			Location tempLoc = new Location(gb.asciiname, gb.countryCode, gb.state, gb.asciiname, gb.population, Column.city, gb.matchNames);//(String outName, String country, String state, String city, long population, Column column, String otherName)
+//			tempLoc.geoKey = gb.getKey();
+//			tempLoc.geoNameID = gb.geonameid;
+//			
+//			if(tempLoc.population > MinPop)
+//			{
+//			
+//				addToAllLoc(tempLoc);
+//				
+//				
+//				String temp = gb.getStateKey();
+//				stateCodes.add(temp);
+//			
+//			
+//			}
+//			
+//			
+////			if(temp.equals("KM.00._"))
+////			{
+////				
+////				
+////				int asdasdfads = 1234;
+////			}
+//			
+//			
+////			
+////			String state = gb.admin1;
+////			
+////			String key = gb.getKey();
+////			String key2 = gb.getKey2();
+////			if(adminBuilder1.containsKey(key))
+////			{
+////				String tempKey = gb.getKey();
+////				state = adminBuilder1.get(tempKey).region;
+////			}
+////			else if(adminBuilder2.containsKey(key2))
+////			{
+////				String tempKey = gb.getKey2();
+////				state = adminBuilder2.get(tempKey).region;
+////			}
+////		
+////			
+////			Location tempLoc = new Location(gb.asciiname, gb.countryCode, state, gb.asciiname, getLong(gb.populationString), Column.city, gb.matchNames);//(String outName, String country, String state, String city, long population, Column column, String otherName)
+////			tempLoc.geoKey = gb.getKey();
+////			tempLoc.geoNameID = gb.geonameid;
+////			addToAllLoc(tempLoc);
+////			
+////		}
+////		
+////		
+////		
+////		
+////		
+////		
+////		Log.log(Log.tab + "Building States");
+////		for(String string : stateCodes)
+////		{
+////			if(adminBuilder1.containsKey(string))
+////			{
+////				AdminBuilder ab = adminBuilder1.get(string);
+////
+////				Location tempLoc = new Location(ab.nameASCII, ab.countryCode, ab.region, ab.nameASCII, 0, Column.state_province, ab.nameASCII);//(String outName, String country, String state, String city, long population, Column column, String otherName)
+////				tempLoc.geoKey = ab.getStateKey();
+////				tempLoc.geoNameID = ab.geonameid;
+////				addToAllLoc(tempLoc);
+////			}
+////			else
+////			{
+////				int asdf= 2134;
+////				
+////				
+////			}
+////		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		Log.log("Load of text data complete");
 
@@ -752,8 +973,18 @@ public class TextParser
 		}
 
 
-
-		Location old = this.allLoc.put(loc.getKey(), loc);
+		String key = null;
+		
+		if(loc.column == Column.city)
+			key = loc.getKey();
+		else if(loc.column == Column.state_province)
+			key = loc.getStateKey();
+		else if(loc.column == Column.country)
+			key = loc.getCountryKey();
+		
+		
+		
+		Location old = this.allLoc.put(key, loc);
 
 		if(old != null)
 		{

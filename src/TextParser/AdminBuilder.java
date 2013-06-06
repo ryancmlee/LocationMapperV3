@@ -24,8 +24,14 @@ public class AdminBuilder extends Builder
 
 	public String getStateKey() 
 	{
-		return countryCode + "." + region;
+		return countryCode + "." + region + "." + "_";
 	}
+	
+	public String getCountryKey() 
+	{
+		return countryCode + "." + region + "." + "_";
+	}
+	
 	
 	@Override
 	public String toString()
@@ -33,6 +39,9 @@ public class AdminBuilder extends Builder
 		return getKey() + " " + nameASCII + " " + "\n";  //data + "\n";
 	}
 	
+	
+	
+
 	
 	public AdminBuilder(String data)
 	{

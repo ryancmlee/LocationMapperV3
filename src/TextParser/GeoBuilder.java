@@ -39,14 +39,27 @@ public class GeoBuilder extends Builder implements Comparable
 	@Override
 	public String getKey() 
 	{
+
 		return countryCode + "." + admin1 + "." + asciiname;
 	}
 
-
-	public String getKey2() 
+	public String getStateKey() 
 	{
-		return countryCode + "." + admin2 + "." + asciiname;
+
+		return countryCode + "." + admin1 + "." + "_";
 	}
+	
+	
+	public String getCountryKey() 
+	{
+
+		return countryCode + "." + "_" + "." + "_";
+	}
+
+//	public String getKey2() 
+//	{
+//		return countryCode + "." + admin2 + "." + asciiname;
+//	}
 
 	@Override
 	public String toString()
@@ -90,21 +103,7 @@ public class GeoBuilder extends Builder implements Comparable
 		
 		strings = alternatenames.split(",");
 
-		for	(String string : strings)
-		{
-
-			if(string.equals("_"))
-				continue;
-
-			string.replace("'", "");
-			
-			if(string.matches("[A-Za-z0-9,â€§=ÅÄÃŸƒ¡©` \\.\\-]+"))
-			{				
-				this.matchNames.add(string);
-			}
-			else
-				TextParser.rejectedMatchWords.add(string);
-		}
+		TextParser.addMatchNames(strings, matchNames);
 
 		this.matchNames.add(name);
 		this.matchNames.add(asciiname);

@@ -10,10 +10,11 @@
 //
 //	Example country : 
 //	us__
-gbeng_
-gblnd_
-ustxearth
-ustxtexas
+
+//gbeng_
+//gblnd_
+//ustxearth
+//ustxtexas
 
 
 //	REMOVE MATCH NAMES ONLY
@@ -25,6 +26,7 @@ ustxtexas
 //
 //	Examples: (tabs are kinda hard to see)
 //	usacaLos Gatos	town of los gatos, the cats
-kp__	north
-tz19_	coast
-usohlondon	london
+
+//kp__	north
+//tz19_	coast
+//usohlondon	london

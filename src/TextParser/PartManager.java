@@ -76,33 +76,31 @@ public class PartManager
 	public ArrayList<Location> getLocations(String text)
 	{
 		HashSet<Location> locations = new HashSet<Location>();
-		ArrayList<String> data = new ArrayList<String>();
-		ArrayList<Location> asdf = new ArrayList<Location>();
+		
+		ArrayList<Location> returnListofLocations = new ArrayList<Location>();
 		
 		
 		if(text == null)
-			return asdf;
+			return returnListofLocations;
 		
 		String[] strings = text.split(regex);
 		
 		
+		ArrayList<String> niceStrings = new ArrayList<String>();
 		for(String string : strings)
 		{
 			string = string.trim();
 			if(string.equals("") == false)
-				data.add(string);
+				niceStrings.add(string);
 		}
-		
-		
-		strings = data.toArray(new String[data.size()]);
-		
+
 		Part currPart = this.partZero;
 		ArrayList<Part> prevParts = new ArrayList<Part>();
 		int j = 0;
 
-		for(int i = 0; i < strings.length; i++)
+		for(int i = 0; i < niceStrings.size(); i++)
 		{
-			String string = strings[i];
+			String string = niceStrings.get(i);
 			
 			if(currPart.NextPart(string) != null) //we have a part match
 			{
@@ -151,11 +149,11 @@ public class PartManager
 		}
 		
 		
-		asdf.addAll(locations);
+		returnListofLocations.addAll(locations);
 		
 		
 		
-		return asdf;
+		return returnListofLocations;
 	}
 	
 	

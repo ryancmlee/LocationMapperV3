@@ -28,6 +28,12 @@ public class Location
 	public String geoKey = null;
 	public String geoNameID = null;
 	
+	
+	
+	
+	
+	
+	
 	private void doConstruction(String country, String state, String city, String outName, long population, Column column, HashSet<String> matchNames)
 	{
 		
@@ -122,10 +128,10 @@ public class Location
 	{
 		String data = "";
 
-		data += this.countryCode + "\t";
-		data += this.stateCode + "\t";
+		data += this.countryCode + ".";
+		data += this.stateCode + ".";
+		data += this.cityCode + ".";
 		data += this.geoNameID + "\t";
-		data += this.cityCode + "\t";
 		data += this.outName + "\t";
 		data += this.column + "\t";
 		data += population + "\t";

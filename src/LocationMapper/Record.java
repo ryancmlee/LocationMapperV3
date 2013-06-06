@@ -12,7 +12,7 @@ import TextParser.Location;
 
 public class Record 
 {
-	final String countryNone =  "'NONE'";
+	final static String countryNone =  "'NONE'";
 	
 	
 	int id;

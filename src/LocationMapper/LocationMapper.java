@@ -180,19 +180,19 @@ public class LocationMapper
 		twitter_user_location = TextParser.makeSuperNice(twitter_user_location);	
 		
 		
-		if(twitter_user_lang.equals("es"))
-		{
-			String temp = twitter_user_location;
-			while(true)
-			{
-				twitter_user_location = twitter_user_location.replaceAll( " de | la | me | en | mi | el | del |el " , " ");
-				
-				if(temp.equals(twitter_user_location))
-					break;
-
-				 temp = twitter_user_location;
-			}
-		}
+//		if(twitter_user_lang.equals("es"))
+//		{
+//			String temp = twitter_user_location;
+//			while(true)
+//			{
+//				twitter_user_location = twitter_user_location.replaceAll( " de | la | me | en | mi | el | del |el " , " ");
+//				
+//				if(temp.equals(twitter_user_location))
+//					break;
+//
+//				 temp = twitter_user_location;
+//			}
+//		}
 	
 		
 
@@ -228,13 +228,20 @@ public class LocationMapper
 		
 		
 		
+		
+		
+		
+		
+		
 		for (Location loc : cities.values())
 		{
+			String key = loc.getStateKey();
 			if(states.containsKey(loc.getStateKey()))// we have a cityLocation that is in a states we also have
 			{
 				loc.hits++;
 				states.get(loc.getStateKey()).hits++;
 			}
+			key = loc.getCountryKey();
 			if(countires.containsKey(loc.getCountryKey()))// we have a countiresLocation that is in a states we also have
 			{
 				loc.hits++;
@@ -243,6 +250,7 @@ public class LocationMapper
 		}
 		for (Location loc : states.values())
 		{
+			String key = loc.getCountryKey();
 			if(countires.containsKey(loc.getCountryKey()))// we have a cityLocation that is in a states we also have
 			{
 				loc.hits++;
@@ -260,6 +268,9 @@ public class LocationMapper
 				highestPop = loc;
 				pop = loc.population;
 			}
+			
+			if(loc.getCountryKey().equals("US._._") )
+				record.textData.put(Column.city, loc);
 		}
 		if(highestPop != null)
 			record.textData.put(Column.city, highestPop);
@@ -274,6 +285,9 @@ public class LocationMapper
 				highestPop = loc;
 				pop = loc.population;
 			}
+			String asdf = loc.getCountryKey();
+			if(loc.getCountryKey().equals("us._._") )
+				record.textData.put(Column.city, loc);
 		}
 		if(highestPop != null)
 			record.textData.put(Column.state_province, highestPop);
@@ -303,7 +317,11 @@ public class LocationMapper
 					Location stateLocation = partManager.allLocations.get(stateKey);
 					
 					if(stateLocation != null) 														//try fill state from city
-						record.textData.put(Column.state_province, stateLocation);						
+						record.textData.put(Column.state_province, stateLocation);
+					else
+					{
+						int asdf = 234;
+					}
 				}
 			}
 			if(record.textData.containsKey(Column.state_province)  && states.size() <= 5)  //yes state

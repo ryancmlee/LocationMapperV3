@@ -88,7 +88,9 @@ public class Part
 		
 		
 		
-		return myToString("");
+		
+		return partialPartName + "|" + fullPartName;
+		//return myToString("");
 	}
 
 	

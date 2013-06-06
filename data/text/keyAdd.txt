@@ -20,7 +20,7 @@
 //	us	_	_	United States of America	country	33300300	United States of America, usa, us, the americas, the states
 
 
-de	_	München	München	city	 1378176	München,Munchen
+//de	_	München	München	city	 1378176	München,Munchen
 
 
 
@@ -35,11 +35,11 @@ de	_	München	München	city	 1378176	München,Munchen
 //	Examples: (tabs are kinda hard to see)
 //	usacaLos Gatos	town of los gatos, the cats
 
-uspa_	Pensylvania
-usny_	ny
-usnynew york	nyc
-gb__	over the pond, across the pond,uk,england
-us__	us,usa,the states,america, the states
-kp__	northkorea, north korea
-usdcwashington	washington dc,dc
-idjk_	Jaya Raya,jakarta
+//uspa_	Pensylvania
+//usny_	ny
+//usnynew york	nyc
+//gb__	over the pond, across the pond,uk,england
+//us__	us,usa,the states,america, the states
+//kp__	northkorea, north korea
+//usdcwashington	washington dc,dc
+//idjk_	Jaya Raya,jakarta

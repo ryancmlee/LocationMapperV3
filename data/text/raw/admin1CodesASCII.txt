@@ -990,7 +990,7 @@ GA.01	Estuaire	Estuaire	2400682
 GB.WLS	Wales	Wales	2634895
 GB.SCT	Scotland	Scotland	2638360
 GB.NIR	N Ireland	N Ireland	2641364
-GB.ENG	England	England	6269131
+GB.EN	England	England	6269131
 GD.06	Saint Patrick	Saint Patrick	3579907
 GD.05	Saint Mark	Saint Mark	3579913
 GD.04	Saint John	Saint John	3579919

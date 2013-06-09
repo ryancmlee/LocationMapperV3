@@ -43,3 +43,5 @@
 //kp__	northkorea, north korea
 //usdcwashington	washington dc,dc
 //idjk_	Jaya Raya,jakarta
+
+"es._._	España,Espana

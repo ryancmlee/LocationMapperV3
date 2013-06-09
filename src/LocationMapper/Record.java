@@ -48,61 +48,126 @@ public class Record
 		String zip = "NULL";
 
 		
-		for(Entry<Column, String> entry : locData.entrySet())
+//		for(Entry<Column, String> entry : locData.entrySet())
+//		{
+//			Column key = entry.getKey();
+//			String value = entry.getValue();
+//			
+//			if(key == Column.country && value.equals("us"))
+//				value = "United States";
+//			
+//	
+//			if(key == Column.country && country.equals(countryNone))
+//			{
+//				country = "'" + value + "'";
+//			}
+//			else if(key == Column.state_province && state.equals("NULL"))
+//			{
+//				state = "'" + value + "'";
+//			}
+//			else if(key == Column.city && city.equals("NULL"))
+//			{
+//				city = "'" + value + "'";
+//			}
+//			else if(key == Column.postal_code && zip.equals("NULL"))
+//			{
+//				zip = "'" + value + "'";
+//			}
+//			
+//		}
+//		
+		
+		
+		if(textData.containsKey(Column.country))										// we have a country
 		{
-			Column key = entry.getKey();
-			String value = entry.getValue();
+			Location tempCountry = textData.get(Column.country);
+			country = "'" + tempCountry.countryCode + "'";
 			
-			if(key == Column.country && value.equals("us"))
-				value = "United States";
+			if(textData.containsKey(Column.state_province))						
+			{
+				Location tempState = textData.get(Column.state_province);
+				if(tempState.countryCode.equals(tempCountry.countryCode))				// we have a state in the country
+				{
+					state = "'" + tempState.stateCode + "'";
+					country = "'" + tempState.countryCode + "'";
+					
+					
+					if(textData.containsKey(Column.city))
+					{
+						Location tempCity = textData.get(Column.city);
+						if(tempCity.stateCode.equals(tempState.stateCode))		//we have a city in the state in the country
+						{
+							city = "'" + tempCity.cityCode + "'";
+							state = "'" + tempCity.stateCode + "'";
+							country = "'" + tempCity.countryCode + "'";
+						}
+					}
+					
+				}
+			}
 			
-	
-			if(key == Column.country && country.equals(countryNone))
-			{
-				country = "'" + value + "'";
-			}
-			else if(key == Column.state_province && state.equals("NULL"))
-			{
-				state = "'" + value + "'";
-			}
-			else if(key == Column.city && city.equals("NULL"))
-			{
-				city = "'" + value + "'";
-			}
-			else if(key == Column.postal_code && zip.equals("NULL"))
-			{
-				zip = "'" + value + "'";
-			}
 			
+			
+		}
+		else if(textData.containsKey(Column.state_province))
+		{
+			Location temp = textData.get(Column.state_province);
+			
+			state = "'" + temp.stateCode + "'";
+			country = "'" + temp.countryCode + "'";
+		}
+		else if(textData.containsKey(Column.city))
+		{
+			Location temp = textData.get(Column.city);
+			
+			city = "'" + temp.cityCode + "'";
+			state = "'" + temp.stateCode + "'";
+			country = "'" + temp.countryCode + "'";
 		}
 		
-		for(Entry<Column, Location> entry : textData.entrySet())
-		{
-			Column key = entry.getKey();
-			String value = entry.getValue().outName;
+		
+//		
+//		for(Entry<Column, Location> entry : textData.entrySet())
+//		{
+//			Column key = entry.getKey();
+//			String value = entry.getValue().outName;
+//			
+//			if(key == Column.country && value.equals("us"))
+//				value = "United States";
+//	
+//			if(key == Column.country && country.equals(countryNone))
+//			{
+//				
+//				country = "'" + value + "'";
+//			}
+//			else if(key == Column.state_province && state.equals("NULL"))
+//			{
+//				
+//				state = "'" + value + "'";
+//				country = "'" + entry.getValue().countryCode + "'";
+//			}
+//			else if(key == Column.city && city.equals("NULL"))
+//			{
+//				city = "'" + value + "'";
+//				state = "'" + entry.getValue().stateCode + "'";
+//				country = "'" + entry.getValue().countryCode + "'";
+//			}
+//			else if(key == Column.postal_code && zip.equals("NULL"))
+//			{
+//				zip = "'" + value + "'";
+//			}
+//			
+//		}
 			
-			if(key == Column.country && value.equals("us"))
-				value = "United States";
-	
-			if(key == Column.country && country.equals(countryNone))
-			{
-				country = "'" + value + "'";
-			}
-			else if(key == Column.state_province && state.equals("NULL"))
-			{
-				state = "'" + value + "'";
-			}
-			else if(key == Column.city && city.equals("NULL"))
-			{
-				city = "'" + value + "'";
-			}
-			else if(key == Column.postal_code && zip.equals("NULL"))
-			{
-				zip = "'" + value + "'";
-			}
-			
-		}
-			
+		
+		
+		if(country.equals("us"))
+			country = "United States";
+		
+//		country = country.replaceAll("'", "''");
+//		state = state.replaceAll("'", "''");
+//		city = city.replaceAll("'", "''");
+
 
 		String sendString = "UPDATE datasift_results SET country=" + country + " , state_province=" + state + " , city=" + city + " , postal_code=" + zip + " WHERE id=" + id + "; ";
 		

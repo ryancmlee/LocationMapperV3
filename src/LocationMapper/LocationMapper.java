@@ -132,7 +132,7 @@ public class LocationMapper
 		TextParser textParser = new TextParser();
 		textParser.loadText(dataDir);
 		textParser.CreateMasterOut(dataDir);
-		Log.doConsolePrint = true;
+	
 	
 		
 		//build partmap
@@ -159,7 +159,9 @@ public class LocationMapper
 	
 		try 
 		{
+			Log.log("Total ParseCount = " + sqlConnectionOUT.parseCount);
 			results.close();
+			
 		} 
 		catch (SQLException e)
 		{
@@ -209,6 +211,12 @@ public class LocationMapper
 		HashMap<String, Location> countires = new HashMap<String, Location>();
 		
 		
+		
+		
+		
+		
+		
+		
 		for (Location loc : record.possableLocations)
 		{
 			loc.hits = 0;
@@ -226,38 +234,49 @@ public class LocationMapper
 			}	
 		}
 		
+	
+//		long pop = -1;
+//		Location highestPop = null;
+//		for (Location loc : cities.values())
+//		{
+//			if(loc.population > pop)
+//			{
+//				highestPop = loc;
+//				pop = loc.population;
+//			}
+//		}
+//		record.textData.put(Column.city, highestPop);
 		
 		
 		
 		
-		
-		
-		
-		for (Location loc : cities.values())
-		{
-			String key = loc.getStateKey();
-			if(states.containsKey(loc.getStateKey()))// we have a cityLocation that is in a states we also have
-			{
-				loc.hits++;
-				states.get(loc.getStateKey()).hits++;
-			}
-			key = loc.getCountryKey();
-			if(countires.containsKey(loc.getCountryKey()))// we have a countiresLocation that is in a states we also have
-			{
-				loc.hits++;
-				countires.get(loc.getCountryKey()).hits++;
-			}
-		}
-		for (Location loc : states.values())
-		{
-			String key = loc.getCountryKey();
-			if(countires.containsKey(loc.getCountryKey()))// we have a cityLocation that is in a states we also have
-			{
-				loc.hits++;
-				countires.get(loc.getCountryKey()).hits++;
-			}
-		}
-		
+//		
+//		
+//		for (Location loc : cities.values())
+//		{
+//			String key = loc.getStateKey();
+//			if(states.containsKey(loc.getStateKey()))// we have a cityLocation that is in a states we also have
+//			{
+//				loc.hits++;
+//				states.get(loc.getStateKey()).hits++;
+//			}
+//			key = loc.getCountryKey();
+//			if(countires.containsKey(loc.getCountryKey()))// we have a countiresLocation that is in a states we also have
+//			{
+//				loc.hits++;
+//				countires.get(loc.getCountryKey()).hits++;
+//			}
+//		}
+//		for (Location loc : states.values())
+//		{
+//			String key = loc.getCountryKey();
+//			if(countires.containsKey(loc.getCountryKey()))// we have a cityLocation that is in a states we also have
+//			{
+//				loc.hits++;
+//				countires.get(loc.getCountryKey()).hits++;
+//			}
+//		}
+//		
 
 		long pop = -1;
 		Location highestPop = null;
@@ -305,34 +324,34 @@ public class LocationMapper
 		if(highestPop != null)
 			record.textData.put(Column.country, highestPop);
 		
-		
-		
-		if(record.textData.containsKey(Column.country) == false) //no country 
-		{
-			if(record.textData.containsKey(Column.state_province) == false)  //no state
-			{
-				if(record.textData.containsKey(Column.city) )//&& cities.size() <= 5) // no country or state yes city
-				{
-					String stateKey = record.textData.get(Column.city).getStateKey();
-					Location stateLocation = partManager.allLocations.get(stateKey);
-					
-					if(stateLocation != null) 														//try fill state from city
-						record.textData.put(Column.state_province, stateLocation);
-					else
-					{
-						int asdf = 234;
-					}
-				}
-			}
-			if(record.textData.containsKey(Column.state_province)  && states.size() <= 5)  //yes state
-			{
-				String countryKey = record.textData.get(Column.state_province).getCountryKey();
-				Location countryLocation = partManager.allLocations.get(countryKey);
-				
-				if(countryLocation != null) 														//try fill country from state
-					record.textData.put(Column.country, countryLocation);	
-			}
-		}
+//		
+//		
+//		if(record.textData.containsKey(Column.country) == false) //no country 
+//		{
+//			if(record.textData.containsKey(Column.state_province) == false)  //no state
+//			{
+//				if(record.textData.containsKey(Column.city) )//&& cities.size() <= 5) // no country or state yes city
+//				{
+//					String stateKey = record.textData.get(Column.city).getStateKey();
+//					Location stateLocation = partManager.allLocations.get(stateKey);
+//					
+//					if(stateLocation != null) 														//try fill state from city
+//						record.textData.put(Column.state_province, stateLocation);
+//					else
+//					{
+//						int asdf = 234;
+//					}
+//				}
+//			}
+//			if(record.textData.containsKey(Column.state_province)  && states.size() <= 5)  //yes state
+//			{
+//				String countryKey = record.textData.get(Column.state_province).getCountryKey();
+//				Location countryLocation = partManager.allLocations.get(countryKey);
+//				
+//				if(countryLocation != null) 														//try fill country from state
+//					record.textData.put(Column.country, countryLocation);	
+//			}
+//		}
 		
 
 

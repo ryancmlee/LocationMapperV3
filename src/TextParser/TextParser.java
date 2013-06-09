@@ -122,223 +122,221 @@ public class TextParser
 		return true; 
 	}
 
-	private Location stndFromStatoids(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex, Column column) 
-	{
-
-		String[] strings = data.split("\t");
-		HashSet<String> matchNames = new HashSet<String>();
-
-
-		String[] stirngs2 = strings[countryAndStateIndex].split("\\.");
-
-
-		String country = stirngs2[0].trim();
-		String state = stirngs2[1].trim();
-		state = state.substring(state.length() - 2,state.length());
-
-
-		String oName = strings[0];
-		if(oNameIndex == countryAndStateIndex)
-		{
-			matchNames.add(oName);
-			oName = state;
-		}
-
-		String city = blank;
-
-		long pop = 0;
-		if(popIndex != -1)
-			pop = getLong(strings[popIndex]);
-
-
-
-		matchNames.add(oName);
-		if(aliasIndex != -1)
-		{
-			String tempString = strings[aliasIndex];
-			matchNames.add(tempString);
-		}
-
-
-		return  new Location(oName, country, state, city, pop, column, matchNames);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
-	}
-
-	private Location stndFromStatoidsCountires(String data, int oNameIndex, int countryAndStateIndex, int popIndex, Column column) 
-	{
-
-		String[] strings = data.split("\t");
-
-		String oName = strings[oNameIndex];
-		if(oName.equals(""))
-			return null;
-
-		String country = strings[countryAndStateIndex];
-		if(country.equals(""))
-			return null;
-
-		String state = blank;
-		String city = blank;
-
-		long pop = 0;
-		if(popIndex != -1)
-			pop = getLong(strings[popIndex]);
-
-		return new Location(oName, country, state, city, pop, column, "");//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
-	}
-
-	private Location ParseUSACityToTextString(String data)
-	{
-		String[] strings = data.split("\t");
-
-		String country = "us";
-		String state = strings[0].trim();
-		String city = strings[3].trim();
-		String oName = city;
-
-		
-		
-
-		long population = getLong(strings[6]);
-
-
-		return new Location(oName, country, state, city, population, Column.city, city);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
-	}
-
-	private Location doCountryAndPop(String string1, String string2) 
-	{
-		ArrayList<String> lines = new ArrayList<String>();
-
-		//		String[] strings = string1.split("\t");
-		//		for(String temp : strings)
-		//			lines.add(temp);
-		//	
-		//		strings = string2.split("\t");
-		//		for(String temp : strings)
-		//			lines.add(temp);
-
-		String[] strings = (string1 + "\t" + string2).split("\t");
-		for(String temp : strings)
-			lines.add(temp);
-
-		return new Location(lines.get(1), lines.get(1), blank, blank, getLong(lines.get(6)), Column.country, lines.get(4)); 
-	}
-
-	private Location fromCDHStates(String data, int oNameIndex, int countryAndStateIndex, int popIndex, Column column, int otherNamesIndex) 
-	{
-		
-		
-		
-		String[] strings = data.split("\t");
-		
-		if(strings.length <= 2)
-			return null;
-		
-		
-		
-		
-		String[] tempStateAndCountry = strings[1].trim().split("-");
-		String country = tempStateAndCountry[0];
-		String state =  tempStateAndCountry[1];
-		String city = blank;
-		
-		String oName = state;
-		
-	
-		long pop = 0;
-		
-		
-		HashSet<String> matchNames = new  HashSet<String>();
-		String officialName = strings[2].trim();
-		if(officialName.equals(""))
-			return null;
-		else
-			TextParser.addMatchNames(officialName, matchNames);
-		
-		
-		if(strings.length >= 4)
-		{
-			strings = strings[3].split(",");
-			
-			TextParser.addMatchNames(strings, matchNames);
-		}
-		
-		
-		
-		
-		
-		return new Location(oName, country, state, city, pop, column, matchNames);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+//	private Location stndFromStatoids(String data, int oNameIndex, int countryAndStateIndex, int popIndex, int aliasIndex, Column column) 
+//	{
 //
 //		String[] strings = data.split("\t");
-//
-//		if(strings.length <= 2)
-//			return null;
-//
-//		String oName = strings[oNameIndex].trim();
-//		if(oName.equals(""))
-//			return null;
+//		HashSet<String> matchNames = new HashSet<String>();
 //
 //
+//		String[] stirngs2 = strings[countryAndStateIndex].split("\\.");
 //
-//		String[] tempStateAndCountry = strings[countryAndStateIndex].trim().split("-");
-//		String country = tempStateAndCountry[0];
-//		String state =  tempStateAndCountry[1];
+//
+//		String country = stirngs2[0].trim();
+//		String state = stirngs2[1].trim();
+//		state = state.substring(state.length() - 2,state.length());
+//
+//
+//		String oName = strings[0];
+//		if(oNameIndex == countryAndStateIndex)
+//		{
+//			matchNames.add(oName);
+//			oName = state;
+//		}
+//
 //		String city = blank;
-//
-//
-//		if(country.equals("us")) //-------------------------------------------SPECIAL FOR US, NOT TO ADD IT TWICE
-//			return null;
-//
-//
 //
 //		long pop = 0;
 //		if(popIndex != -1)
 //			pop = getLong(strings[popIndex]);
 //
-//		HashSet<String> matchNames = new  HashSet<String>();
+//
 //
 //		matchNames.add(oName);
-//
-//
-//
-//		if(strings.length > 3)
+//		if(aliasIndex != -1)
 //		{
-//			String tempString = strings[otherNamesIndex].trim();
-//			String[] tempStrings = tempString.split(",");
-//			for(String string : tempStrings)
-//				matchNames.add(string);
+//			String tempString = strings[aliasIndex];
+//			matchNames.add(tempString);
 //		}
+//
+//
+//		return  new Location(oName, country, state, city, pop, column, matchNames);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+//	}
+//
+//	private Location stndFromStatoidsCountires(String data, int oNameIndex, int countryAndStateIndex, int popIndex, Column column) 
+//	{
+//
+//		String[] strings = data.split("\t");
+//
+//		String oName = strings[oNameIndex];
+//		if(oName.equals(""))
+//			return null;
+//
+//		String country = strings[countryAndStateIndex];
+//		if(country.equals(""))
+//			return null;
+//
+//		String state = blank;
+//		String city = blank;
+//
+//		long pop = 0;
+//		if(popIndex != -1)
+//			pop = getLong(strings[popIndex]);
+//
+//		return new Location(oName, country, state, city, pop, column, "");//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+//	}
+//
+//	private Location ParseUSACityToTextString(String data)
+//	{
+//		String[] strings = data.split("\t");
+//
+//		String country = "us";
+//		String state = strings[0].trim();
+//		String city = strings[3].trim();
+//		String oName = city;
+//
+//		
+//		
+//
+//		long population = getLong(strings[6]);
+//
+//
+//		return new Location(oName, country, state, city, population, Column.city, city);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+//	}
+//
+//	private Location doCountryAndPop(String string1, String string2) 
+//	{
+//		ArrayList<String> lines = new ArrayList<String>();
+//
+//		//		String[] strings = string1.split("\t");
+//		//		for(String temp : strings)
+//		//			lines.add(temp);
+//		//	
+//		//		strings = string2.split("\t");
+//		//		for(String temp : strings)
+//		//			lines.add(temp);
+//
+//		String[] strings = (string1 + "\t" + string2).split("\t");
+//		for(String temp : strings)
+//			lines.add(temp);
+//
+//		return new Location(lines.get(1), lines.get(1), blank, blank, getLong(lines.get(6)), Column.country, lines.get(4)); 
+//	}
+//
+//	private Location fromCDHStates(String data, int oNameIndex, int countryAndStateIndex, int popIndex, Column column, int otherNamesIndex) 
+//	{
+//		
+//		
+//		
+//		String[] strings = data.split("\t");
+//		
+//		if(strings.length <= 2)
+//			return null;
+//		
+//		
+//		
+//		
+//		String[] tempStateAndCountry = strings[1].trim().split("-");
+//		String country = tempStateAndCountry[0];
+//		String state =  tempStateAndCountry[1];
+//		String city = blank;
+//		
+//		String oName = state;
+//		
+//	
+//		long pop = 0;
+//		
+//		
+//		HashSet<String> matchNames = new  HashSet<String>();
+//		String officialName = strings[2].trim();
+//		if(officialName.equals(""))
+//			return null;
+//		else
+//			TextParser.addMatchNames(officialName, matchNames);
+//		
+//		
+//		if(strings.length >= 4)
+//		{
+//			strings = strings[3].split(",");
+//			
+//			TextParser.addMatchNames(strings, matchNames);
+//		}
+//		
+//		
+//		
+//		
+//		
+//		return new Location(oName, country, state, city, pop, column, matchNames);//(String officialName, String country, String state, String city, long population, HashSet<String> otherNames)
+////
+////		String[] strings = data.split("\t");
+////
+////		if(strings.length <= 2)
+////			return null;
+////
+////		String oName = strings[oNameIndex].trim();
+////		if(oName.equals(""))
+////			return null;
+////
+////
+////
+////		String[] tempStateAndCountry = strings[countryAndStateIndex].trim().split("-");
+////		String country = tempStateAndCountry[0];
+////		String state =  tempStateAndCountry[1];
+////		String city = blank;
+////
+////
+////		if(country.equals("us")) //-------------------------------------------SPECIAL FOR US, NOT TO ADD IT TWICE
+////			return null;
+////
+////
+////
+////		long pop = 0;
+////		if(popIndex != -1)
+////			pop = getLong(strings[popIndex]);
+////
+////		HashSet<String> matchNames = new  HashSet<String>();
+////
+////		matchNames.add(oName);
+////
+////
+////
+////		if(strings.length > 3)
+////		{
+////			String tempString = strings[otherNamesIndex].trim();
+////			String[] tempStrings = tempString.split(",");
+////			for(String string : tempStrings)
+////				matchNames.add(string);
+////		}
+//
+//		
+//	}
+//
+//	private Location fromWorldCitiesPop(String data)
+//	{
+//		String[] strings = data.split(",");
+//
+//		String oName = strings[1];
+//		String country = strings[0];
+//
+//		if(country.equals("us"))
+//			return null;
+//
+//		String state = blank;//strings[3].trim().toLowerCase();
+//		String city = strings[2];
+//
+//		long pop = getLong(strings[4]);
+//		if(pop < MinPop)
+//			return null;
+//
+//
+//		Location temp = new Location(oName, country, state, city, pop, Column.city);
+//		temp.matchNames.add(city);
+//
+//		return temp;
+//
+//	}
 
-		
-	}
-
-	private Location fromWorldCitiesPop(String data)
-	{
-		String[] strings = data.split(",");
-
-		String oName = strings[1];
-		String country = strings[0];
-
-		if(country.equals("us"))
-			return null;
-
-		String state = blank;//strings[3].trim().toLowerCase();
-		String city = strings[2];
-
-		long pop = getLong(strings[4]);
-		if(pop < MinPop)
-			return null;
-
-
-		Location temp = new Location(oName, country, state, city, pop, Column.city);
-		temp.matchNames.add(city);
-
-		return temp;
-
-	}
-
-
-	
-	//SE.02	Blekinge	Blekinge	2721357
+	//SE.02[0]	Blekinge[1]	Blekinge[2]	2721357[3]
 	private HashMap<String, String[]> loadFIPStoNameAdmin(String data)
 	{
 		HashMap<String, String[]> FIPStoNameMap = new HashMap<String, String[]>();
@@ -350,20 +348,16 @@ public class TextParser
 		temp[1] =  strings[2];
 		
 		
-		String CountryAndStateCode = strings[0];
+		String CountryAndStateCode = strings[0].toLowerCase();
 	
 		FIPStoNameMap.put(CountryAndStateCode, temp);
 		
 		return FIPStoNameMap;
 	}
 
-	
-	
-	
-	
 //	COUNTRY NAME||ISO 3166-2 SUB-DIVISION/STATE CODE||ISO 3166-2 SUBDIVISION/STATE NAME||ISO 3166-2 PRIMARY LEVEL NAME||SUBDIVISION/STATE ALTERNATE NAMES
-//	Afghanistan[0]	AF-BDS[1]	Badakhshān[2]	Province[3]	Badaẖšan[4]
-	private HashMap<String, String> loadNameToISOcdh( String data)
+//	Afghanistan[0]	AF-BDS[1]	Badakhshān[2]	Province[3]		Badaẖšan[4]
+	private HashMap<String, String> loadNameToISOcdh(String data)
 	{
 		HashMap<String, String> nameToISOmap = new  HashMap<String, String>();
 
@@ -376,40 +370,37 @@ public class TextParser
 			return nameToISOmap;
 		
 		
-		String countryName = strings[0];
-		String countryCode = split[0];
-		String stateCode = split[1];
-		String isoName = strings[2];
+		String countryName = strings[0].toLowerCase();
+		String countryCode = split[0].toLowerCase();
+		String stateCode = split[1].toLowerCase();
+		String isoName = strings[2].toLowerCase();
 		String levelName = null;
-		if(strings.length > 3)			//has 
+		if(strings.length > 3)			//has levelName
 		{
 			levelName = strings[3];
-			
 			
 			if(levelNames.containsKey(levelName))
 				levelNames.put(levelName, levelNames.get(levelName) + 1);
 			else
 				levelNames.put(levelName, 1);
-			
 		}
-		
-		nameToISOmap.put(isoName, countryCode + "."+ stateCode);
-		
 
-		if(strings.length > 4)			//has 
+		
+		if(strings.length > 4)			//has matchNames
 		{
 			for(String string : strings[4].split(","))
 				nameToISOmap.put(string, stateCode);
 		}
 		
-		ISOtoCountryNameMmap.put(countryCode, countryName);
-		
+		nameToISOmap.put(isoName, countryCode + "."+ stateCode);
+		ISOtoCountryNameMmap.put(countryCode, countryName);  //why do i have this?
+		countryCodeToNameMap.put(countryCode, countryName);
 		
 		return nameToISOmap;
 	}
 
 	
-	HashMap<String, String> ISOtoCountryNameMmap = new  HashMap<String, String>();
+	
 	
 	
 	
@@ -417,13 +408,21 @@ public class TextParser
 	HashMap<String, String> nameToISOmap = new  HashMap<String, String>();
 	
 	
+	HashMap<String, String> ISOtoCountryNameMmap = new  HashMap<String, String>();
+	
 	public static HashMap<String, Integer> levelNames = new HashMap<String, Integer>();
 	public static HashSet<String> rejectedMatchWords = new HashSet<String>();
 	public static String allowedCharacters = "[A-Za-z0-9,â€§=ÅÄÃŸƒ¡©` \\.\\-]+";
 	
 	//key _ _ _,  location
 	public HashMap<String, Location> allLoc = new HashMap<String, Location>();
+	public HashMap<String, Location> allCities = new HashMap<String, Location>();
+	public HashMap<String, Location> allStates = new HashMap<String, Location>();
+	public HashMap<String, Location> allCountries = new HashMap<String, Location>();
 
+	HashMap<String, String> countryCodeToNameMap  = new  HashMap<String, String>();
+	
+	
 	static HashSet<String> removeEndings = new HashSet<String>();
 	static HashMap<String, String> makeNiceList = new HashMap<String, String>();
 
@@ -469,7 +468,31 @@ public class TextParser
 
 
 	
-	@SuppressWarnings("unchecked")
+	
+	private String getISOfromFIPS(String countryDOTstateCODE)
+	{
+		if(FIPStoNameMap.containsKey(countryDOTstateCODE))
+		{
+			String[] names = FIPStoNameMap.get(countryDOTstateCODE);
+			
+			if(names == null) return null;
+			
+			for(String string : names)
+			{
+				if(nameToISOmap.containsKey(string))
+				{
+					return nameToISOmap.get(string);
+				}
+			}
+		}
+		
+		return null;
+	}
+			
+	
+	
+	
+	
 	public void loadText(String dataDir)
 	{
 		String tempFileLoc = null;
@@ -503,7 +526,7 @@ public class TextParser
 
 		tempFileLoc = dataDir + "/text/removeEndings.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
-		for(String string : LoadTextFile(tempFileLoc, null, true))
+		for(String string : LoadTextFile(tempFileLoc, null, false))
 			removeEndings.add(string.toLowerCase());
 		//Log.log(Log.tab + removeEndings.size() + " removeEndings loaded");
 
@@ -513,43 +536,187 @@ public class TextParser
 		
 		tempFileLoc = dataDir + "/text/raw/nameToISOcdh.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
-		for(String string : LoadTextFile(tempFileLoc, null, true))
+		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
 			HashMap<String, String> temp = loadNameToISOcdh(string);
 			nameToISOmap.putAll(temp);
 		}
+//		
+//		
+//		Log.log(Log.tab + "Generating levelNames and count");
+//		String format = "%1$03d";
+//		ArrayList<String> tempLevelNames = new ArrayList<String>();
+//		for (String string : levelNames.keySet())
+//			tempLevelNames.add(String.format(format,levelNames.get(string)) + "=" + string);
+//		Collections.sort(tempLevelNames);
+//		//String out = "";
+//		for (String string : tempLevelNames)
+//			Log.log(Log.tab + string);
+//			//out += string + "\n";
+//		
+//		
+//		
+//		
 		
-		
-		String format = "%1$03d";
-
-		
-		
-		ArrayList<String> asdf = new ArrayList<String>();
-		for (String string : levelNames.keySet())
-			asdf.add(String.format(format,levelNames.get(string)) + "=" + string);
-			
-		Collections.sort(asdf);
-		
-		String out = "";
-		
-		for (String string : asdf)
+		tempFileLoc = dataDir + "/text/raw/admin1CodesASCII.txt";
+		Log.log(Log.tab + "Loading " + tempFileLoc);
+		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
-			out += string + "\n";
+			HashMap<String, String[]> temp = loadFIPStoNameAdmin(string);
+			FIPStoNameMap.putAll(temp);
+		}
+		
+		
+		
+		tempFileLoc = dataDir + "/text/raw/cities1000.txt";
+		Log.log(Log.tab + "Loading " + tempFileLoc);
+		for(String string : LoadTextFile(tempFileLoc, null, false))
+		{
+			String[] strings = string.split("\t");
+
+			String geonameid          = (strings[0]);		// integer id of record in geonames database
+			String name               = (strings[1]);		// name of geographical point (utf8) varchar(200)
+			String asciiname          = (strings[2]);		// name of geographical point in plain ascii characters, varchar(200)
+			String alternatenames     = (strings[3]);		// alternatenames, comma separated varchar(5000)
+			String latitude           = (strings[4]);		// latitude in decimal degrees (wgs84)
+			String longitude          = (strings[5]);		// longitude in decimal degrees (wgs84)
+			String featureClass       = (strings[6]);		// see http://www.geonames.org/export/codes.html, char(1)
+			String featureCode        = (strings[7]);		// see http://www.geonames.org/export/codes.html, varchar(10)
+			String countryCode     	= (strings[8]);		// ISO-3166 2-letter country code, 2 characters
+			String cc3     			= (strings[9]);		// alternate country codes, comma separated, ISO-3166 2-letter country code, 60 characters
+			String admin1     		= (strings[10]);		// fipscode (subject to change to iso code), see exceptions below, see file admin1Codes.txt for display names of this code; varchar(20)
+			String admin2     		= (strings[11]);		// code for the second administrative division, a county in the US, see file admin2Codes.txt; varchar(80) 	
+			String admin3      		= (strings[12]);		// code for third level administrative division, varchar(20)
+			String admin4      		= (strings[13]);		// code for fourth level administrative division, varchar(20)
+			String populationString   = (strings[14]);		// bigint (8 byte int) 
+			//String elevation          = (strings[15]);		// in meters, integer
+			//String dem                = (strings[16]);		// digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat.
+			//String timezone           = (strings[17]);		// the timezone id (see file timeZone.txt) varchar(40)
+			//String modificationDate   = (strings[18]);		// date of last modification in yyyy-MM-dd format
+
+			long population = TextParser.getLong(populationString);
+			
+			
+			strings = alternatenames.split(",");
+			HashSet<String> matchNames = new HashSet<String>();
+			TextParser.addMatchNames(strings, matchNames);
+			matchNames.add(name);
+			matchNames.add(asciiname);
+			
+			
+			
+			Location loc = new Location(asciiname, countryCode, admin1, asciiname, population, "_lvl_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+			this.addToAllLoc(loc);
+			
+			
+//			//set Specifics
+//			if(admin1.equals(""))
+//			{
+//				Log.log("admin1 is blank for " + string);
+//			}
+//			else if(admin1.equals("ENG"))
+//			{
+//				admin1 = "EN";
+//			}
+//			
+//				
+//
+//			String countryDOTstateCODE = countryCode + "." + admin1;
+//			
+//			
+//			String stateISO = this.getISOfromFIPS(countryDOTstateCODE);
+//			
+//			
+//			if(stateISO == null)
+//			{
+//				
+//				Log.log("if(FIPStoNameMap.containsKey(admin1) == false)  " + countryDOTstateCODE + "||" + y++);
+//			}
+//			else
+//			{
+//				t++;
+//				
+//				
+//				Location loc = new Location(asciiname, stateISO, asciiname, population, "_lvl_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+//				this.addToAllLoc(loc);
+//			}
+			
+			
+			
+		}
+		
+		
+		//build states
+		for(Location loc : allCities.values())
+		{
+			
+			String stateKey = loc.getStateKey();
+			if(allStates.containsKey(stateKey) == false)						//no state, lets add it
+			{
+				{
+					String[] strings = stateKey.split("\\.");
+				
+				
+					HashSet<String> matchNames = new HashSet<String>();				//add matchNames for states
+					String tempStateKey = strings[0] + "." + strings[1];
+					if(FIPStoNameMap.containsKey(tempStateKey))
+					{
+						String[] tempStrings = FIPStoNameMap.get(tempStateKey);
+						TextParser.addMatchNames(tempStrings, matchNames);
+					}
+					
+					
+					
+					Location newState = new Location(strings[1], strings[0], strings[1], "_", 0, "_lvl_", Column.state_province, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+					this.addToAllLoc(newState);
+				}
+				
+	
+				String countryKey = loc.getCountryKey();
+				if(allCountries.containsKey(countryKey) == false)						//no country, lets add it
+				{
+					{
+						String[] strings = countryKey.split("\\.");
+						
+						
+						
+						HashSet<String> matchNames = new HashSet<String>();				//add matchNames for countries
+						String tempCountryKey = strings[0];
+						if(countryCodeToNameMap.containsKey(tempCountryKey))
+						{
+							String tempString = countryCodeToNameMap.get(tempCountryKey);
+							TextParser.addMatchNames(tempString, matchNames);
+						}
+						
+						
+						
+						Location newCountry = new Location(strings[0], strings[0], "_", "_", 0, "_lvl_", Column.country, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+						this.addToAllLoc(newCountry);
+					}
+				}
+				
+				
+				
+				
+				
+			}
+			
+			
+			
+			
+			
+			
 		}
 		
 		
 		
 		
-		tempFileLoc = dataDir + "/text/raw/admin1CodesASCII.txt";
-//		Log.log(Log.tab + "Loading " + tempFileLoc);
-//		for(String string : LoadTextFile(tempFileLoc, null, true))
-//		{
-//			HashMap<String, String[]> temp = loadFIPStoNameAdmin(string);
-//			FIPStoNameMap.putAll(temp);
-//		}
 		
 		
 		
+		allLoc.putAll(allCities);
+		allLoc.putAll(allStates);
+		allLoc.putAll(allCountries);
 		
 		
 //		
@@ -798,6 +965,10 @@ public class TextParser
 		String tempFileLoc = null;
 
 
+		
+		
+		
+		
 		Log.log("Proccessing text data for MasterOut");
 
 
@@ -920,14 +1091,13 @@ public class TextParser
 	
 	public static String makeSuperNice(String string)
 	{
-		if(true)
-			return makeNice(string);
+//		if(true)
+//			return makeNice(string);
 		
 		
-		if(string == null)
-			return "";
 		
-		string = string.trim().toLowerCase();
+		
+		string = makeNice(string);
 		
 		
 		
@@ -976,27 +1146,35 @@ public class TextParser
 		String key = null;
 		
 		if(loc.column == Column.city)
-			key = loc.getKey();
-		else if(loc.column == Column.state_province)
-			key = loc.getStateKey();
-		else if(loc.column == Column.country)
-			key = loc.getCountryKey();
-		
-		
-		
-		Location old = this.allLoc.put(key, loc);
-
-		if(old != null)
 		{
-			
-			if(old.population > loc.population)
-				this.allLoc.put(old.getKey(), old);
-			
-//			Log.log("DEBUG: duplacate key found while adding to allLoc...");
-//			Log.log(Log.tab	+ "Added:   " + loc.toString());
-//			Log.log(Log.tab	+ "Removed: " + old.toString());
-//			return true;
+			key = loc.getKey();
+			this.allCities.put(key, loc);
 		}
+		else if(loc.column == Column.state_province)
+		{
+			key = loc.getStateKey();
+			this.allStates.put(key, loc);
+		}
+		else if(loc.column == Column.country)
+		{
+			key = loc.getCountryKey();
+			this.allCountries.put(key, loc);
+		}
+		
+		
+		//Location old = this.allLoc.put(key, loc);
+
+//		if(old != null)
+//		{
+//			
+//			if(old.population > loc.population)
+//				this.allLoc.put(old.getKey(), old);
+//			
+////			Log.log("DEBUG: duplacate key found while adding to allLoc...");
+////			Log.log(Log.tab	+ "Added:   " + loc.toString());
+////			Log.log(Log.tab	+ "Removed: " + old.toString());
+////			return true;
+//		}
 
 		return true;
 	}
@@ -1019,7 +1197,7 @@ public class TextParser
 		}
 		catch (Exception e)
 		{
-			Log.log("Unable to parse long:" + string, e);
+			//Log.log("Unable to parse long: " + string, e);
 			return 0;
 		}
 		

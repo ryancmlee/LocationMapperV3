@@ -24,9 +24,11 @@ public class Location
 
 	public Column column;
 
-
-	public String geoKey = null;
-	public String geoNameID = null;
+	public String level = null;
+	
+	
+//	public String geoKey = null;
+//	public String geoNameID = null;
 	
 	
 	
@@ -34,7 +36,7 @@ public class Location
 	
 	
 	
-	private void doConstruction(String country, String state, String city, String outName, long population, Column column, HashSet<String> matchNames)
+	private void doConstruction(String country, String state, String city, String outName, long population, Column column, String level, HashSet<String> matchNames)
 	{
 		
 		String[] temps = outName.split(",");	//take the first part of a name... forgot why i do this
@@ -47,7 +49,7 @@ public class Location
 		this.cityCode =  TextParser.makeSuperNice(city);
 		this.population = population;
 		this.column = column;
-
+		this.level = level;
 		
 		if(matchNames != null)
 		{
@@ -57,20 +59,36 @@ public class Location
 		}
 	
 	}
-	public Location(String outName, String country, String state, String city, long population, Column column, HashSet<String> matchNames)
+	public Location(String outName, String countryDOTstate, String city, long population, String level, Column column,HashSet<String> matchNames)
 	{
-		doConstruction(country, state, city, outName, population, column, matchNames);
+		String[] strings = countryDOTstate.split("\\.");
+		
+		if(strings.length < 2)
+		{
+			
+			int asdfds =234;	
+		
+		}
+		
+		
+		
+		doConstruction(strings[0], strings[1], city, outName, population, column, level, matchNames);
 	}
-	public Location(String outName, String country, String state, String city, long population, Column column, String otherName)
+	
+	public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+	{
+		doConstruction(country, state, city, outName, population, column, level, matchNames);
+	}
+	public Location(String outName, String country, String state, String city, long population, Column column, String level, String otherName)
 	{
 		HashSet<String> matchNames = new HashSet<String>();
 		matchNames.add(otherName);
 		
-		doConstruction(country, state, city, outName, population, column, matchNames);
+		doConstruction(country, state, city, outName, population, column, level, matchNames);
 	}
-	public Location(String outName, String country, String state, String city, long population, Column column)
+	public Location(String outName, String country, String state, String city, long population, Column column, String level)
 	{
-		doConstruction(country, state, city, outName, population, column, null);
+		doConstruction(country, state, city, outName, population, column, level, null);
 	}
 
 	public Location(String string) throws Exception
@@ -78,13 +96,21 @@ public class Location
 			
 			String[] strings = string.split("\t");
 			
-			String outName = strings[3];
+			
 			String countryCode = strings[0];
 			String stateCode = strings[1];
 			String cityCode = strings[2];
+			
+			String level = strings[1];
+			
+			String outName = strings[3];
+			
 			long population = TextParser.getLong(strings[5]);
+			
 			Column column = Column.valueOf(strings[4]);
+			
 			HashSet<String> matchNames = new HashSet<String>();
+			
 			
 			if(strings.length > 6)
 			{
@@ -103,7 +129,7 @@ public class Location
 			}
 				
 		
-			doConstruction(countryCode, stateCode, cityCode, outName, population, column, matchNames);
+			doConstruction(countryCode, stateCode, cityCode, outName, population, column, level, matchNames);
 	}
 	
 	public String getKey()
@@ -130,16 +156,17 @@ public class Location
 
 		data += this.countryCode + ".";
 		data += this.stateCode + ".";
-		data += this.cityCode + ".";
-		data += this.geoNameID + "\t";
+		data += this.cityCode + "\t";
+		data += this.level + "\t";
 		data += this.outName + "\t";
 		data += this.column + "\t";
 		data += population + "\t";
+		data += ",";									//all matchnames start and end with ,
 
 		for(String string : this.matchNames)
 			data += string + ","; 
 
-		data = data.substring(0, data.length() - 1);
+		//data = data.substring(0, data.length() - 1);
 		
 		return data;
 	}

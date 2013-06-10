@@ -51,3 +51,4 @@ es._._	Espana,spain
 ru._._	russia,russian,ruski
 us.fl._	florida
 tr._._	Turkiye
+mx._._	mexico

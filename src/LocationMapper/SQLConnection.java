@@ -22,8 +22,8 @@ public class SQLConnection
 	public final String statement = "" +
 	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
 	"FROM datasift_results " +
-	"WHERE id > 33900000 " + //34016150 " + //
-	//"WHERE country is null " + 
+	//"WHERE id > 33900000 " +
+	"WHERE country is null " + 
 	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";
 
 	
@@ -42,6 +42,7 @@ public class SQLConnection
 	public String userName = null;
 	public String password = null;
 	
+	ArrayList<String> sendStrings = new ArrayList<String>();
 	
 	
 	public SQLConnection(String address, String tableName, String port, String userName, String password)
@@ -54,20 +55,6 @@ public class SQLConnection
 	}
 	
 	
-	
-	//String sendString = "";
-	ArrayList<String> sendStrings = new ArrayList<String>();
-	
-	
-	
-	private void doBinaryUpdate()
-	{
-		
-		
-		
-	}
-	
-
 	public boolean updateRecord(Record record)
 	{
 		
@@ -77,11 +64,9 @@ public class SQLConnection
 		parseCount++;
 		if(parseCount % this.batchCount == 0)
 		{
-			
 			flush(sendStrings);
 			Log.log("ParseCount = " + parseCount);
 			sendStrings.clear();
-			
 		}
 		
 		return true;
@@ -101,7 +86,11 @@ public class SQLConnection
 	
 	public void flush(List<String> stringsToBeSent)// throws SQLException
 	{
-
+		if(stringsToBeSent == null || stringsToBeSent.size() == 0)
+		{
+			Log.log("Error in flush: if(stringsToBeSent == null || stringsToBeSent.size() == 0) evaluated to true..." + stringsToBeSent);
+			return;
+		}
 
 		Statement stmt = null;
 		try {
@@ -117,7 +106,6 @@ public class SQLConnection
 		
 		for(String string : stringsToBeSent)
 			sendString += string;
-		
 		
 		
 		
@@ -140,16 +128,9 @@ public class SQLConnection
 	
 			flush(list1);
 			flush(list2);
-
 		}
 		
-		
-		
-		
-		
-		
 		stringsToBeSent.clear();
-
 	}
 	
 	
@@ -205,19 +186,7 @@ public class SQLConnection
 	}
 
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	public boolean Connect()
 	{
@@ -227,14 +196,14 @@ public class SQLConnection
 		
 		try
 		{
-		    Class.forName("org.postgresql.Driver");
+			Class.forName("org.postgresql.Driver");
 		}
 		catch (ClassNotFoundException cnfe)
 		{
-		      Log.log("ERROR: Could not find the JDBC driver!");
-		      return false;
+			Log.log("ERROR: Could not find the JDBC driver!");
+			return false;
 		}
-		
+
 		String connectionString = "jdbc:postgresql://" + address +":" + port + "/" + tableName;
 		Log.log("Connecting to " + connectionString);
 		try 

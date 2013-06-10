@@ -56,3 +56,9 @@ tu
 cu
 mexico
 uk
+valley
+earth
+world
+central
+centre
+center

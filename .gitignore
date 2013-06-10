@@ -2,7 +2,7 @@
 
 
 
-*.class
+/bin/
 .project
 .settings/
 *.log

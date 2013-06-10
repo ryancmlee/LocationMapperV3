@@ -1,4 +1,4 @@
-COUNTRY NAME	ISO 3166-2 SUB-DIVISION/STATE CODE	ISO 3166-2 SUBDIVISION/STATE NAME	SUBDIVISION/STATE ALTERNATE NAMES
+//COUNTRY NAME	ISO 3166-2 SUB-DIVISION/STATE CODE	ISO 3166-2 SUBDIVISION/STATE NAME	SUBDIVISION/STATE ALTERNATE NAMES
 Afghanistan	AF-BDS	Badakhshān	Badaẖšan
 Afghanistan	AF-BGL	Baghlān	Baghlan, Baghlān, Baglan
 Afghanistan	AF-BAL	Balkh	Balkh
@@ -4898,4 +4898,3 @@ Zimbabwe	ZW-MV	Masvingo
 Zimbabwe	ZW-MN	Matabeleland North	
 Zimbabwe	ZW-MS	Matabeleland South	
 Zimbabwe	ZW-MI	Midlands	
-	PA-KY	Kuna Yala	

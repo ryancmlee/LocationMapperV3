@@ -3,7 +3,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -18,7 +21,23 @@ public class Log
 	public static boolean doConsolePrint = true;
 	public static boolean doLog = true;
 	
-	private static String log = "";
+	//private static String log = "";
+	
+	
+	private static ArrayList<String> log = new ArrayList<String>();
+	
+//	public static void logQue(String data)
+//	{
+//		log(data, false);
+//	}
+//	
+//	
+	
+	
+	public static void logSilent(String data)
+	{
+		log.add(data);
+	}
 	
 	
 	public static void log(String data)
@@ -37,7 +56,7 @@ public class Log
 				System.out.println(out);
 		}
 		if(doLog)
-			log += out + "\r\n";
+			log.add(out);
 	}
 	
 	public static void log(String data, Exception e)
@@ -47,6 +66,27 @@ public class Log
 		log(getStackTrace(e));
 	}
 	
+	public static void logNow(String data, String name)
+	{
+		
+		String saveLoc = LocationMapper.logDir + "/" + name;
+		
+		
+		 try
+		 {
+			  FileWriter fstream = new FileWriter(saveLoc, false);
+			  BufferedWriter out = new BufferedWriter(fstream);
+			  
+			  out.write(data);
+			  out.close();
+			  fstream.close();
+		 }
+		 catch (Exception e)
+		 {
+			  System.err.println("Error: " + e.getMessage());
+		 }
+		
+	}
 	
 	public static String getStackTrace(Exception e)
 	{
@@ -74,13 +114,17 @@ public class Log
 		log("Total Run time: " + totalRunTime);
 		log("Saving log: " + saveLoc);
 		log(breakString);
-		log(breakString);
-
+		log(breakString);		
+		
+		
+		
 		 try
 		 {
 			  FileWriter fstream = new FileWriter(saveLoc, doAppend);
 			  BufferedWriter out = new BufferedWriter(fstream);
-			  out.write(log);
+			  
+			  for(String string : log)
+				  out.write(string + "\n");
 			  out.close();
 			  fstream.close();
 		 }

@@ -1,19 +1,24 @@
+///////////////////////////		depreciated
 //	REMOVE WHOLE LOCATION
 //	EXACTALY 1 entrie
 //	_0_	= unique location key  [iso country, iso state or "_", city name or "_" (no spaces or comma(space ok in city name only): i.e: los gatos would be: "uscaLos Gatos")]
 //
 //	Example city :
-//	uscalos gatos
+//	us.ca.los gatos
 //
 //	Example state :
-//	usca_
+//	us.ca._
 //
 //	Example country : 
-//	us__
-gbeng_
-gblnd_
-ustxearth
-ustxtexas
+//	us._._
+
+//gb.eng._
+//gb.lnd._
+//us.tx.earth
+//us.tx.texas
+///////////////////////////		depreciated
+
+
 
 
 //	REMOVE MATCH NAMES ONLY
@@ -25,6 +30,24 @@ ustxtexas
 //
 //	Examples: (tabs are kinda hard to see)
 //	usacaLos Gatos	town of los gatos, the cats
-kp__	north
-tz19_	coast
-usohlondon	london
+
+//kp._._	north
+//tz.19._	coast
+//us.oh.london	london
+//mx.09.mexico city	mexico
+
+
+
+//	REMOVE MATCH GLOBALY
+//	EXACTALY 1 entire
+//	_0_ = match name will be removed from all matchnames in all locations
+//
+//	Example :
+//	all
+//
+//
+
+all
+la
+rep
+florida

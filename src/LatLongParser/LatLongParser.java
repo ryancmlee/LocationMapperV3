@@ -3,8 +3,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.HashMap;
 
-
-import LocationMapper.*;
+import LocationMapper.Log;
+import LocationMapper.Record;
 import diewald_shapeFile.files.dbf.DBF_File;
 import diewald_shapeFile.files.shp.SHP_File;
 import diewald_shapeFile.files.shp.shapeTypes.ShpPolygon;

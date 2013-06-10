@@ -1,5 +1,3 @@
-import org.joda.time.DateTime;
-
 import LocationMapper.LocationMapper;
 import LocationMapper.Log;
 

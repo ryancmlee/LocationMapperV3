@@ -1,7 +1,6 @@
 package TextParser;
 
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import LatLongParser.Column;
@@ -27,22 +26,11 @@ public class Location
 	public String level = null;
 	
 	
-//	public String geoKey = null;
-//	public String geoNameID = null;
-	
-	
-	
-	
 	
 	
 	
 	private void doConstruction(String country, String state, String city, String outName, long population, Column column, String level, HashSet<String> matchNames)
-	{
-		
-//		String[] temps = outName.split(",");	//take the first part of a name... forgot why i do this
-//		if(temps.length > 1)
-//			outName = temps[0];
-		
+	{		
 		this.outName = TextParser.makeSuperNice(outName);
 		this.countryCode = TextParser.makeSuperNice(country);
 		this.stateCode = TextParser.makeSuperNice(state);
@@ -148,8 +136,6 @@ public class Location
 
 	
 
-
-
 	@Override 
 	public String toString() 
 	{
@@ -166,8 +152,6 @@ public class Location
 
 		for(String string : this.matchNames)
 			data += string + ","; 
-
-		//data = data.substring(0, data.length() - 1);
 		
 		return data;
 	}

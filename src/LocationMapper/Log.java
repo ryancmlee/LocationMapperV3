@@ -4,12 +4,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.Period;
 
 

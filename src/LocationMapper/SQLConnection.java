@@ -7,6 +7,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import LocationMapper.LocationMapper;
+import LocationMapper.Log;
+import LocationMapper.Record;
+
 
 public class SQLConnection 
 {

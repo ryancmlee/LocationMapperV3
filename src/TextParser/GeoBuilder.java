@@ -1,10 +1,6 @@
 package TextParser;
 
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
 import java.util.HashSet;
-
-import LocationMapper.Log;
 
 public class GeoBuilder extends Builder implements Comparable
 {

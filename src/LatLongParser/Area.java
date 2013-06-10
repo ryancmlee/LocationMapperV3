@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import LocationMapper.*;
-
+import LocationMapper.Log;
 import diewald_shapeFile.files.shp.shapeTypes.ShpPolygon;
 
 

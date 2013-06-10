@@ -6,6 +6,7 @@
 .project
 .settings/
 *.log
+.classpath
 
 /data/*
 !/data/text/

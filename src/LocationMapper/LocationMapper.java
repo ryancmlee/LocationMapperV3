@@ -181,11 +181,11 @@ public class LocationMapper
 	{
 
 		
-		Log.log(twitter_user_location);
+		
 		
 		twitter_user_location = TextParser.makeSuperNice(twitter_user_location);	
 		
-		Log.log(twitter_user_location);
+	
 		
 //		if(twitter_user_lang.equals("es"))
 //		{

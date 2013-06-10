@@ -672,7 +672,7 @@ public class TextParser
 					
 					
 					
-					Location newState = new Location(strings[1], strings[0], strings[1], "_", 0, "_lvl_", Column.state_province, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+					Location newState = new Location(strings[1], strings[0], strings[1], "_", 0, "_", Column.state_province, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
 					this.addLoc(newState);
 				}
 				
@@ -683,7 +683,10 @@ public class TextParser
 					{
 						String[] strings = countryKey.split("\\.");
 						
-						
+						if(strings[0].equals(""))
+						{
+							int asdfasf =234;
+						}
 						
 						HashSet<String> matchNames = new HashSet<String>();				//add matchNames for countries
 						String tempCountryKey = strings[0];
@@ -695,7 +698,7 @@ public class TextParser
 						
 						
 						
-						Location newCountry = new Location(strings[0], strings[0], "_", "_", 0, "_lvl_", Column.country, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+						Location newCountry = new Location(strings[0], strings[0], "_", "_", 0, "_", Column.country, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
 						this.addLoc(newCountry);
 					}
 				}
@@ -1111,6 +1114,9 @@ public class TextParser
 //			return makeNice(string);
 		
 		string = makeNice(string);
+		
+		if(string.equals("_"))
+			return string;
 		
 		for(String key : makeNiceList.keySet())
 			string = string.replace(key, makeNiceList.get(key));

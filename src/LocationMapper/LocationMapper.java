@@ -135,7 +135,7 @@ public class LocationMapper
 		textParser.CreateMasterOut(dataDir);
 	
 	
-		
+		//Exit(0);
 		//build partmap
 		partManager = new PartManager(textParser.allLoc, "[, \\./\\\\]");
 		
@@ -180,6 +180,9 @@ public class LocationMapper
 	public void ProcessAndUpdate(int id, float latitude, float longitude, String twitter_user_location, String twitter_user_lang)
 	{
 
+		
+		
+		
 		twitter_user_location = TextParser.makeSuperNice(twitter_user_location);	
 		
 		

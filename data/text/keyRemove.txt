@@ -36,7 +36,7 @@
 //us.oh.london	london
 //mx.09.mexico city	mexico
 
-
+us.al.montgomery	alabama
 
 //	REMOVE MATCH GLOBALY
 //	EXACTALY 1 entire
@@ -51,3 +51,6 @@ all
 la
 rep
 florida
+and
+tu
+cu

@@ -92,7 +92,7 @@ public class SQLConnection
 	{
 		if(stringsToBeSent == null || stringsToBeSent.size() == 0)
 		{
-			Log.log("Error in flush: if(stringsToBeSent == null || stringsToBeSent.size() == 0) evaluated to true..." + stringsToBeSent);
+			//Log.log("Error in flush: if(stringsToBeSent == null || stringsToBeSent.size() == 0) evaluated to true..." + stringsToBeSent);
 			return;
 		}
 

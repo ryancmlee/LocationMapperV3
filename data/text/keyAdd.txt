@@ -52,3 +52,4 @@ ru._._	russia,russian,ruski
 us.fl._	florida
 tr._._	Turkiye
 mx._._	mexico
+gb._._	uk,Britain,england,great britian,

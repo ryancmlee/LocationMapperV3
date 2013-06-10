@@ -47,7 +47,7 @@ public class TextParser
 				if(string.startsWith("//") || string.equals(""))  //wont be null cause of   while ((string = br.readLine()) != null) 
 					continue;
 
-				data.add(string.trim());
+				data.add(string);
 			}
 
 			br.close();
@@ -505,7 +505,7 @@ public class TextParser
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
-			String[] strings = string.split("\t");
+			String[] strings = string.split(";");
 			try
 			{
 				String key = strings[0];
@@ -513,8 +513,6 @@ public class TextParser
 				if(strings.length > 1)
 					value = strings[1];
 				
-				if(key.length() > 1)
-					value = " " + value + " ";
 				makeNiceList.put(key, value);
 			}
 			catch (Exception e)
@@ -977,14 +975,24 @@ public class TextParser
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
 			String[] strings = string.split("\t");
-
-			if(strings.length == 1)// remove whole location it
+			
+//			//depreciated
+//			if(strings.length == 1)// remove whole location it
+//			{
+//				String key = strings[0];
+//
+//				Location tempLocation = this.allLoc.remove(key);
+//				if(tempLocation == null)
+//					Log.log("ERROR could not remove location: " + key + " key not found. either wrong key or target location does not exist", true);
+//
+//			}
+			if(strings.length == 1)// remove matchName globaly
 			{
 				String key = strings[0];
 
-				Location tempLocation = this.allLoc.remove(key);
-				if(tempLocation == null)
-					Log.log("ERROR could not remove location: " + key + " key not found. either wrong key or target location does not exist", true);
+				for (Location loc : allLoc.values())
+					loc.matchNames.remove(key);
+				
 
 			}
 			if(strings.length == 2) // remove matchname

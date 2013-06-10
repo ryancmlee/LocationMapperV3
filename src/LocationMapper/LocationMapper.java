@@ -136,7 +136,7 @@ public class LocationMapper
 	
 		
 		//build partmap
-		partManager = new PartManager(textParser.allLoc, "[, ]");
+		partManager = new PartManager(textParser.allLoc, "[, \\./\\\\]");
 		
 		
 		

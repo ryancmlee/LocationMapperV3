@@ -44,4 +44,6 @@
 //usdcwashington	washington dc,dc
 //idjk_	Jaya Raya,jakarta
 
-"es._._	España,Espana
+us._._	Murcia,america,usa,u.s.a,united states
+es._._	España,Espana,spain
+ru._._	russia,russian,ruski

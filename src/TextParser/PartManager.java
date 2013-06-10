@@ -209,6 +209,7 @@ public class PartManager
 			}
 			catch (Exception e)
 			{
+				Log.log("Error in splitting location name with regex ",e);
 				continue;
 			}
 			

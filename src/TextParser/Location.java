@@ -18,7 +18,7 @@ public class Location
 	
 	public long population = 0;
 
-	public ArrayList<String> matchNames = new ArrayList<String>();
+	public HashSet<String> matchNames = new HashSet<String>();
 	
 	public int hits = 0;
 

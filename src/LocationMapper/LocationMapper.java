@@ -134,8 +134,7 @@ public class LocationMapper
 		textParser.loadText(dataDir);
 		textParser.CreateMasterOut(dataDir);
 	
-	
-		//Exit(0);
+
 		//build partmap
 		partManager = new PartManager(textParser.allLoc, "[, \\./\\\\]");
 		
@@ -144,7 +143,7 @@ public class LocationMapper
 
 		//load LatLongParser
 		latLongParser = new LatLongParser();
-		//latLongParser.loadData(dataDir);
+		latLongParser.loadData(dataDir);
 		
 	
 		

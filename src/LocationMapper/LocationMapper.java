@@ -95,7 +95,7 @@ public class LocationMapper
 		Log.log("port = " + port);
 		Log.log("userName = " + userName);
 		Log.log("password = " + password);
-		Log.log("pdataDir = " + dataDir);
+		Log.log("dataDir = " + dataDir);
 		Log.log(Log.breakString);
 		
 		

@@ -514,6 +514,7 @@ public class TextParser
 					value = strings[1];
 				
 				makeNiceList.put(key, value);
+				Log.log(key + "=" + value);
 			}
 			catch (Exception e)
 			{

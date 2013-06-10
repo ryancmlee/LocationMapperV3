@@ -38,6 +38,13 @@
 
 us.al.montgomery	alabama
 
+
+
+
+
+
+
+
 //	REMOVE MATCH GLOBALY
 //	EXACTALY 1 entire
 //	_0_ = match name will be removed from all matchnames in all locations
@@ -70,3 +77,5 @@ here
 there
 paradise
 up
+lab
+lap

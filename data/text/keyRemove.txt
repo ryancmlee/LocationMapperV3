@@ -62,3 +62,11 @@ world
 central
 centre
 center
+north
+east
+west
+south
+here
+there
+paradise
+up

@@ -103,9 +103,19 @@ public class Record
 					
 				}
 			}
-			
-			
-			
+			else																	//no state
+			{
+				if(textData.containsKey(Column.city))
+				{
+					Location tempCity = textData.get(Column.city);
+					if(tempCity.stateCode.equals(tempCountry.stateCode))		//we have a city in the country
+					{
+						city = "'" + tempCity.cityCode + "'";
+						state = "'" + tempCity.stateCode + "'";
+						country = "'" + tempCity.countryCode + "'";
+					}
+				}
+			}
 		}
 		else if(textData.containsKey(Column.state_province))				//we have a state
 		{

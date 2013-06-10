@@ -39,11 +39,11 @@ public class Location
 	private void doConstruction(String country, String state, String city, String outName, long population, Column column, String level, HashSet<String> matchNames)
 	{
 		
-		String[] temps = outName.split(",");	//take the first part of a name... forgot why i do this
-		if(temps.length > 1)
-			outName = temps[0];
+//		String[] temps = outName.split(",");	//take the first part of a name... forgot why i do this
+//		if(temps.length > 1)
+//			outName = temps[0];
 		
-		this.outName = TextParser.makeSuperNice(outName).replace("'", "");
+		this.outName = TextParser.makeSuperNice(outName);
 		this.countryCode = TextParser.makeSuperNice(country);
 		this.stateCode = TextParser.makeSuperNice(state);
 		this.cityCode =  TextParser.makeSuperNice(city);
@@ -51,46 +51,47 @@ public class Location
 		this.column = column;
 		this.level = level;
 		
-		if(matchNames != null)
+	
+		for(String string : matchNames)
 		{
-			for(String string : matchNames)
-				if(string.equals("_") == false)
-					this.matchNames.add(TextParser.makeSuperNice(string));
+			string = TextParser.makeSuperNice(string);
+			TextParser.addMatchNames(string, this.matchNames);
 		}
 	
+		matchNames.clear();
 	}
-	public Location(String outName, String countryDOTstate, String city, long population, String level, Column column,HashSet<String> matchNames)
-	{
-		String[] strings = countryDOTstate.split("\\.");
-		
-		if(strings.length < 2)
-		{
-			
-			int asdfds =234;	
-		
-		}
-		
-		
-		
-		doConstruction(strings[0], strings[1], city, outName, population, column, level, matchNames);
-	}
-	
+//	public Location(String outName, String countryDOTstate, String city, long population, String level, Column column,HashSet<String> matchNames)
+//	{
+//		String[] strings = countryDOTstate.split("\\.");
+//		
+//		if(strings.length < 2)
+//		{
+//			
+//			int asdfds =234;	
+//		
+//		}
+//		
+//		
+//		
+//		doConstruction(strings[0], strings[1], city, outName, population, column, level, matchNames);
+//	}
+//	
 	public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
 	{
 		doConstruction(country, state, city, outName, population, column, level, matchNames);
 	}
-	public Location(String outName, String country, String state, String city, long population, Column column, String level, String otherName)
-	{
-		HashSet<String> matchNames = new HashSet<String>();
-		matchNames.add(otherName);
-		
-		doConstruction(country, state, city, outName, population, column, level, matchNames);
-	}
-	public Location(String outName, String country, String state, String city, long population, Column column, String level)
-	{
-		doConstruction(country, state, city, outName, population, column, level, null);
-	}
-
+//	public Location(String outName, String country, String state, String city, long population, Column column, String level, String otherName)
+//	{
+//		HashSet<String> matchNames = new HashSet<String>();
+//		matchNames.add(otherName);
+//		
+//		doConstruction(country, state, city, outName, population, column, level, matchNames);
+//	}
+//	public Location(String outName, String country, String state, String city, long population, Column column, String level)
+//	{
+//		doConstruction(country, state, city, outName, population, column, level, null);
+//	}
+//
 	public Location(String string) throws Exception
 	{
 			

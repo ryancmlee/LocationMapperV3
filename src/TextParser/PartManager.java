@@ -173,6 +173,12 @@ public class PartManager
 		
 		this.allLocations.put(location.getKey(), location);
 		
+		if(location.getKey().equals("es._._"))
+		{
+			
+			int asdf =234;
+		}
+		
 		
 		if(location.column == Column.city)
 			cityCount++;

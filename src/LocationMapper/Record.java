@@ -109,12 +109,24 @@ public class Record
 			
 			
 		}
-		else if(textData.containsKey(Column.state_province))
+		else if(textData.containsKey(Column.state_province))				//we have a state
 		{
-			Location temp = textData.get(Column.state_province);
+			Location tempState = textData.get(Column.state_province);
 			
-			state = "'" + temp.stateCode + "'";
-			country = "'" + temp.countryCode + "'";
+			state = "'" + tempState.stateCode + "'";
+			country = "'" + tempState.countryCode + "'";
+			
+			if(textData.containsKey(Column.city))
+			{
+				Location tempCity = textData.get(Column.city);
+				if(tempCity.stateCode.equals(tempState.stateCode))		//we have a city in the state
+				{
+					city = "'" + tempCity.cityCode + "'";
+					state = "'" + tempCity.stateCode + "'";
+					country = "'" + tempCity.countryCode + "'";
+				}
+			}
+			
 		}
 		else if(textData.containsKey(Column.city))
 		{
@@ -161,8 +173,8 @@ public class Record
 			
 		
 		
-		if(country.equals("us"))
-			country = "United States";
+		if(country.equals("'us'"))
+			country = "'United States'";
 		
 //		country = country.replaceAll("'", "''");
 //		state = state.replaceAll("'", "''");

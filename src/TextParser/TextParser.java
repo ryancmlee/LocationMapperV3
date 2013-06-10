@@ -44,7 +44,7 @@ public class TextParser
 			String string;
 			while ((string = br.readLine()) != null)   
 			{
-				if(string.startsWith("//") || string.equals(""))  //wont be null cause of   while ((string = br.readLine()) != null) 
+				if(string.startsWith("//") || string.trim().equals(""))  //wont be null cause of   while ((string = br.readLine()) != null) 
 					continue;
 
 				data.add(string);
@@ -344,11 +344,11 @@ public class TextParser
 		String[] strings = data.split("\t");
 		
 		String[] temp = new String[2];
-		temp[0] =  strings[1];
-		temp[1] =  strings[2];
+		temp[0] =  makeNice(strings[1]);
+		temp[1] =  makeNice(strings[2]);
 		
 		
-		String CountryAndStateCode = strings[0].toLowerCase();
+		String CountryAndStateCode = makeNice(strings[0]);
 	
 		FIPStoNameMap.put(CountryAndStateCode, temp);
 		
@@ -370,14 +370,14 @@ public class TextParser
 			return nameToISOmap;
 		
 		
-		String countryName = strings[0].toLowerCase();
-		String countryCode = split[0].toLowerCase();
-		String stateCode = split[1].toLowerCase();
-		String isoName = strings[2].toLowerCase();
+		String countryName = makeNice(strings[0]);
+		String countryCode = makeNice(split[0]);
+		String stateCode = makeNice(split[1]);
+		String isoName = makeNice(strings[2]);
 		String levelName = null;
 		if(strings.length > 3)			//has levelName
 		{
-			levelName = strings[3];
+			levelName = makeNice(strings[3]);
 			
 			if(levelNames.containsKey(levelName))
 				levelNames.put(levelName, levelNames.get(levelName) + 1);
@@ -388,12 +388,12 @@ public class TextParser
 		
 		if(strings.length > 4)			//has matchNames
 		{
-			for(String string : strings[4].split(","))
+			for(String string : makeNice(strings[4]).split(","))
 				nameToISOmap.put(string, stateCode);
 		}
 		
-		nameToISOmap.put(isoName, countryCode + "."+ stateCode);
-		ISOtoCountryNameMmap.put(countryCode, countryName);  //why do i have this?
+		nameToISOmap.put(isoName, countryCode + "."+ stateCode);	//not used anymore
+		ISOtoCountryNameMmap.put(countryCode, countryName);  		//why do i have this?
 		countryCodeToNameMap.put(countryCode, countryName);
 		
 		return nameToISOmap;
@@ -505,7 +505,7 @@ public class TextParser
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
-			String[] strings = string.split(";");
+			String[] strings = string.toLowerCase().split(";");
 			try
 			{
 				String key = strings[0];
@@ -525,7 +525,7 @@ public class TextParser
 		tempFileLoc = dataDir + "/text/removeEndings.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
-			removeEndings.add(string.toLowerCase());
+			removeEndings.add(makeNice(string));
 		//Log.log(Log.tab + removeEndings.size() + " removeEndings loaded");
 
 
@@ -570,6 +570,7 @@ public class TextParser
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
+			
 			String[] strings = string.split("\t");
 
 			String geonameid          = (strings[0]);		// integer id of record in geonames database
@@ -593,18 +594,23 @@ public class TextParser
 			//String modificationDate   = (strings[18]);		// date of last modification in yyyy-MM-dd format
 
 			long population = TextParser.getLong(populationString);
-			
+		
 			
 			strings = alternatenames.split(",");
 			HashSet<String> matchNames = new HashSet<String>();
-			TextParser.addMatchNames(strings, matchNames);
+			
+			for(String string2 : strings)
+				matchNames.add(string2);
+			
 			matchNames.add(name);
 			matchNames.add(asciiname);
 			
+		
 			
 			
-			Location loc = new Location(asciiname, countryCode, admin1, asciiname, population, "_lvl_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
-			this.addToAllLoc(loc);
+			
+			Location loc = new Location(asciiname, countryCode, admin1, asciiname, population, "_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+			this.addLoc(loc);
 			
 			
 //			//set Specifics
@@ -660,13 +666,14 @@ public class TextParser
 					if(FIPStoNameMap.containsKey(tempStateKey))
 					{
 						String[] tempStrings = FIPStoNameMap.get(tempStateKey);
-						TextParser.addMatchNames(tempStrings, matchNames);
+						for(String string : tempStrings)
+							matchNames.add(string);
 					}
 					
 					
 					
 					Location newState = new Location(strings[1], strings[0], strings[1], "_", 0, "_lvl_", Column.state_province, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
-					this.addToAllLoc(newState);
+					this.addLoc(newState);
 				}
 				
 	
@@ -683,13 +690,13 @@ public class TextParser
 						if(countryCodeToNameMap.containsKey(tempCountryKey))
 						{
 							String tempString = countryCodeToNameMap.get(tempCountryKey);
-							TextParser.addMatchNames(tempString, matchNames);
+							matchNames.add(tempString);
 						}
 						
 						
 						
 						Location newCountry = new Location(strings[0], strings[0], "_", "_", 0, "_lvl_", Column.country, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
-						this.addToAllLoc(newCountry);
+						this.addLoc(newCountry);
 					}
 				}
 				
@@ -1037,7 +1044,7 @@ public class TextParser
 					continue;
 				}
 
-				addToAllLoc(tempLoc);
+				addLoc(tempLoc);
 				//				if(tempLoc != null)
 				//				{
 				//					noDups.put(tempLoc.getKey(), tempLoc);
@@ -1057,10 +1064,11 @@ public class TextParser
 
 				for(String value : values)
 				{
-					//value = makeNice(value);
+					
 					if(value.equals("") == false && tempLoc.matchNames.contains(value) == false)
 					{
-						tempLoc.matchNames.add(value);
+						value = TextParser.makeSuperNice(value);
+						TextParser.addMatchNames(value, tempLoc.matchNames);
 					}
 				}
 			}
@@ -1102,36 +1110,21 @@ public class TextParser
 //		if(true)
 //			return makeNice(string);
 		
-		
-		
-		
 		string = makeNice(string);
 		
-		
-		
-		
 		for(String key : makeNiceList.keySet())
-		{
-//			if(key.length() == 1)
-				string = string.replace(key, makeNiceList.get(key));
-//			else
-//				string = string.replace(" " + key + " ", makeNiceList.get(key));
-		}
-		
-		string = string.trim().toLowerCase();
+			string = string.replace(key, makeNiceList.get(key));
+
+		string = string.trim();
 		
 		for	(String ending : removeEndings)
 		{
 			if(string.endsWith(ending))
 			{
-				string = string.replace(ending, "").trim();
+				string = string.replace(ending, "");
 				break;
 			}
-			
 		}
-		
-		
-	
 		
 		return string;
 	}
@@ -1142,7 +1135,7 @@ public class TextParser
 
 
 
-	private boolean addToAllLoc(Location loc)
+	private boolean addLoc(Location loc)
 	{
 		if(loc == null)
 		{

@@ -4,6 +4,7 @@ package LocationMapper;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.joda.time.DateTime;
@@ -211,15 +212,9 @@ public class LocationMapper
 		HashMap<String, Location> countires = new HashMap<String, Location>();
 		
 		
-		
-		
-		
-		
-		
-		
+
 		for (Location loc : record.possableLocations)
 		{
-			loc.hits = 0;
 			if(loc.column == Column.city)
 			{
 				cities.put(loc.getKey(), loc);	
@@ -234,7 +229,68 @@ public class LocationMapper
 			}	
 		}
 		
-	
+		boolean hasES = false;
+		if(record.twitter_user_lang.equals("es"))
+		{
+			for ( String string : new ArrayList<String>(cities.keySet()))
+			{
+				if(cities.get(string).countryCode.equals("es"))
+				{
+					hasES = true;
+							break;
+				}
+				
+			}
+			
+			if(hasES)
+			{
+				for ( String string : new ArrayList<String>(cities.keySet()))
+				{
+					if(cities.get(string).countryCode.equals("es") == false)
+					{
+						cities.remove(string);
+					}
+					
+				}
+				
+			}
+			else
+			{
+				for ( String string : new ArrayList<String>(states.keySet()))
+				{
+					if(states.get(string).countryCode.equals("es"))
+					{
+						hasES = true;
+								break;
+					}
+					
+				}
+			}
+			
+			if(hasES)
+			{
+				for ( String string : new ArrayList<String>(states.keySet()))
+				{
+					if(states.get(string).countryCode.equals("es") == false)
+					{
+						states.remove(string);
+					}
+					
+				}
+				for ( String string : new ArrayList<String>(countires.keySet()))
+				{
+					if(countires.get(string).countryCode.equals("es") == false)
+					{
+						countires.remove(string);
+					}
+					
+				}
+				
+			}
+			
+			
+		}
+		
 //		long pop = -1;
 //		Location highestPop = null;
 //		for (Location loc : cities.values())
@@ -288,8 +344,8 @@ public class LocationMapper
 				pop = loc.population;
 			}
 			
-			if(loc.getCountryKey().equals("US._._") )
-				record.textData.put(Column.city, loc);
+//			if(loc.getCountryKey().equals("US._._") )
+//				record.textData.put(Column.city, loc);
 		}
 		if(highestPop != null)
 			record.textData.put(Column.city, highestPop);
@@ -304,9 +360,9 @@ public class LocationMapper
 				highestPop = loc;
 				pop = loc.population;
 			}
-			String asdf = loc.getCountryKey();
-			if(loc.getCountryKey().equals("us._._") )
-				record.textData.put(Column.city, loc);
+			
+//			if(loc.getCountryKey().equals("us._._") )
+//				record.textData.put(Column.city, loc);
 		}
 		if(highestPop != null)
 			record.textData.put(Column.state_province, highestPop);
@@ -323,6 +379,12 @@ public class LocationMapper
 		}
 		if(highestPop != null)
 			record.textData.put(Column.country, highestPop);
+		
+		
+		
+		
+	
+		
 		
 //		
 //		

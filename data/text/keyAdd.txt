@@ -1,3 +1,5 @@
+
+///////////////////////////		depreciated
 //	ADD NEW LOCATION
 //	EXACTALY 7 entries delimited by tab (/t) 
 //	_0_	_1_	_2_	_3_	_4_	_5_	_6_	_7_
@@ -11,17 +13,17 @@
 //	_6_ = new matchNames  [comma (,) delimiter](i.e "town of los gatos, the cats")
 //
 //	Example city : (tabs are kinda hard to see)
-//	us	ca	los gatos	Los Gatos	city	5000	los gatos, the cats, town of los gatos
+//	us.ca.los gatos	Los Gatos	city	5000	los gatos, the cats, town of los gatos
 //
 //	Example state : (tabs are kinda hard to see)
 //	us	ca	_	California	state_province	California,ca, cali, cali., the golden state, sunny cal
 //
 //	Example country : (tabs are kinda hard to see)
 //	us	_	_	United States of America	country	33300300	United States of America, usa, us, the americas, the states
-
-
+//
+//
 //de	_	München	München	city	 1378176	München,Munchen
-
+///////////////////////////		depreciated
 
 
 
@@ -45,5 +47,6 @@
 //idjk_	Jaya Raya,jakarta
 
 us._._	Murcia,america,usa,u.s.a,united states
-es._._	España,Espana,spain
+es._._	Espana,spain
 ru._._	russia,russian,ruski
+us.fl._	florida

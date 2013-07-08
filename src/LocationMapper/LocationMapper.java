@@ -20,7 +20,7 @@ public class LocationMapper
 {
 	public static String workDir = "";
 	public static String logDir = "";
-	public static String dataDir = "data";
+	public static String dataDir = "D:\\data"; // D:\\data
 	public static String textDir = "text";
 	
 	public DateTime startDateTime;;

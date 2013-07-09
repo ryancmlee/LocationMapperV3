@@ -5,10 +5,12 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.joda.time.DateTime;
 
+import LatLongParser.Area;
 import LatLongParser.Column;
 import LatLongParser.LatLongParser;
 import TextParser.Location;
@@ -100,43 +102,47 @@ public class LocationMapper
 		
 		
 		
-		
-//		test connection to server
-		sqlConnectionIN = new SQLConnection(address, serverName, port, userName, password);//(String address, String tableName, String port, String userName, String passwo
-		if(this.sqlConnectionIN.Connect() == false)
-		{
-			Log.log("Unable to connect to to sqlServer IN");
-			Log.log("Exiting");
-			Exit(1);
-			return;
-		}
-		try {
-			sqlConnectionIN.connection.setAutoCommit(false);
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		
-		sqlConnectionOUT = new SQLConnection(address, serverName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
-		if(this.sqlConnectionOUT.Connect() == false)
-		{
-			Log.log("Unable to connect to to sqlServer OUT");
-			Log.log("Exiting");
-			Exit(1);
-			return;
-		}
-		
+//		
+////		test connection to server
+//		sqlConnectionIN = new SQLConnection(address, serverName, port, userName, password);//(String address, String tableName, String port, String userName, String passwo
+//		if(this.sqlConnectionIN.Connect() == false)
+//		{
+//			Log.log("Unable to connect to to sqlServer IN");
+//			Log.log("Exiting");
+//			Exit(1);
+//			return;
+//		}
+//		try {
+//			sqlConnectionIN.connection.setAutoCommit(false);
+//		} catch (SQLException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		
+//		
+//		sqlConnectionOUT = new SQLConnection(address, serverName, port, userName, password);//(String address, String tableName, String port, String userName, String password)
+//		if(this.sqlConnectionOUT.Connect() == false)
+//		{
+//			Log.log("Unable to connect to to sqlServer OUT");
+//			Log.log("Exiting");
+//			Exit(1);
+//			return;
+//		}
+//		
 		
 	
 		//load textParser
 		TextParser textParser = new TextParser();
 		textParser.loadText(dataDir);
 		textParser.CreateMasterOut(dataDir);
-	
-
+//	
+//
+//		if(true)	
+//			return;
+//		
+		
 		//build partmap
-		partManager = new PartManager(textParser.allLoc, "[, \\./\\\\]");
+//		partManager = new PartManager(textParser.allLoc, "[, \\./\\\\]");
 		
 		
 		
@@ -144,6 +150,29 @@ public class LocationMapper
 		//load LatLongParser
 		latLongParser = new LatLongParser();
 		latLongParser.loadData(dataDir);
+		
+		
+		for(Location loc : textParser.allLoc.values())
+		{
+			
+			latLongParser.setPossableLocations(loc);
+	
+		}
+		
+		
+		
+		String tempFileLoc = dataDir + "/text/hits.txt";
+		Log.log("Writing " + tempFileLoc);
+		ArrayList<String> outStrings = new ArrayList<String>(LatLongParser.hitAreas.size());
+		for(Area area : LatLongParser.hitAreas)
+		{
+			
+			String temp =  String.format("%08d" , area.hits) + "|"+ area.column +"|" + area.officialName + "|" + area.fips + "|" + area.zip;
+			outStrings.add(temp);
+		}
+		Collections.sort(outStrings);
+		textParser.writeText(tempFileLoc, null, outStrings);
+		Log.log(Log.tab + outStrings.size() + " Locations");
 		
 	
 		

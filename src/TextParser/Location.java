@@ -15,6 +15,9 @@ public class Location
 	public String cityCode = "";
 
 	
+	public float lat;
+	public float lon;
+	
 	public long population = 0;
 
 	public HashSet<String> matchNames = new HashSet<String>();
@@ -146,6 +149,8 @@ public class Location
 		data += this.cityCode + "\t";
 		data += this.level + "\t";
 		data += this.outName + "\t";
+		data += this.lat + "\t";
+		data += this.lon + "\t";
 		data += this.column + "\t";
 		data += population + "\t";
 		data += ",";									//all matchnames start and end with ,

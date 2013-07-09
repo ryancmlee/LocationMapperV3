@@ -18,6 +18,15 @@ import diewald_shapeFile.files.shp.shapeTypes.ShpPolygon;
 public class Area implements Serializable
 {
 	public static boolean doCommpression = false;
+
+
+	public int hits = 0;
+	
+	public String fips = "";
+	public String zip = "";
+	
+	public float lat = 0;
+	public float lon = 0;
 	
 	public String officialName;
 	public Column column;

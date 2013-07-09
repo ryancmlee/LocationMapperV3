@@ -43,6 +43,12 @@ public class LatLongParser
 		//returns each area it hits  so like, us then ca then 95032
 		while((area = area.getFirstAreaWithin(location.lon, location.lat)) != null)
 		{
+			if(area.officialName.equals("us"))
+			{
+				int asdf = 234;
+				
+			}
+			
 			area.hits++;
 			hitAreas.add(area);
 		}
@@ -156,7 +162,7 @@ public class LatLongParser
 			{
 				if(tempArea.officialName.equals("us"))
 				{
-					this.loadUSAStatesAndZips(dataDir + "/usa", null);
+					this.loadUSAStatesAndZips(dataDir + "/usa", tempArea);
 					tempSucsess = true;
 					break;
 				}
@@ -217,7 +223,7 @@ public class LatLongParser
     	    stateArea.fips = fips;
 			
 			stateFIPStoStateAreaMap.put(stateNumber, stateArea); 
-    		//usaArea.subAreas.add(stateArea);
+    		usaArea.subAreas.add(stateArea);
     	}
 	    	
 	    	
@@ -245,17 +251,17 @@ public class LatLongParser
 		    		for (int j = 0; j < stateShape.getSHP_shapeCount(); j++) // for each zip, add it. -- does not check for repeats
 			    	{
 		    			
-		    			String field = stateShape.getDBF_record(i, 0);
-		        		String zip = stateShape.getDBF_record(i, 1);
-		        		String field2 = stateShape.getDBF_record(i, 2);
-		        		String field3 = stateShape.getDBF_record(i, 3);
-		        		String field4 = stateShape.getDBF_record(i, 4);
-		        		String field5 = stateShape.getDBF_record(i, 5);
-		        		String field6 = stateShape.getDBF_record(i, 6);
-		        		String field7 = stateShape.getDBF_record(i, 7);
-		        		String lat = stateShape.getDBF_record(i, 8);
-		        		String lon = stateShape.getDBF_record(i, 9);
-		        		String field10 = stateShape.getDBF_record(i, 10);
+		    			String field = stateShape.getDBF_record(j, 0);
+		        		String zip = stateShape.getDBF_record(j, 1);
+		        		String field2 = stateShape.getDBF_record(j, 2);
+		        		String field3 = stateShape.getDBF_record(j, 3);
+		        		String field4 = stateShape.getDBF_record(j, 4);
+		        		String field5 = stateShape.getDBF_record(j, 5);
+		        		String field6 = stateShape.getDBF_record(j, 6);
+		        		String field7 = stateShape.getDBF_record(j, 7);
+		        		String lat = stateShape.getDBF_record(j, 8);
+		        		String lon = stateShape.getDBF_record(j, 9);
+		        		String field10 = stateShape.getDBF_record(j, 10);
 
 		        		
 		    			

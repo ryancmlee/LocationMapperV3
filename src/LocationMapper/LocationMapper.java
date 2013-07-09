@@ -167,7 +167,7 @@ public class LocationMapper
 		for(Area area : LatLongParser.hitAreas)
 		{
 			
-			String temp =  String.format("%08d" , area.hits) + "|"+ area.column +"|" + area.officialName + "|" + area.fips + "|" + area.zip;
+			String temp =  String.format("%05d" , area.hits) + "|"+ area.column +"|"  + area.fips + "|" + area.officialName + "|" + area.zip  ;
 			outStrings.add(temp);
 		}
 		Collections.sort(outStrings);

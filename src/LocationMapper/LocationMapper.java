@@ -85,6 +85,7 @@ public class LocationMapper
 		}
 		
 		this.logDir = dataDir + "/logs";
+		this.textDir = dataDir + "/text";
 		
 		
 		this.startDateTime = new DateTime();

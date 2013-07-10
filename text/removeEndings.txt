@@ -1,8 +1,0 @@
-//if a USA city ends with this it will be cut off before MasterOut
-city
-cdp
-town
-village
-borough
-zona urbana
-comunidad

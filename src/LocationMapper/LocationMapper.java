@@ -21,7 +21,7 @@ public class LocationMapper
 	public static String workDir = "";
 	public static String logDir = "";
 	public String dataDir = "D:\\data"; // D:\\data
-	public String textDir = "text";
+	public String textDir = "LocationMapperV3/text";
 	
 	public DateTime startDateTime;;
 

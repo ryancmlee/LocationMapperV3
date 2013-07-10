@@ -20,8 +20,8 @@ public class LocationMapper
 {
 	public static String workDir = "";
 	public static String logDir = "";
-	public static String dataDir = "D:\\data"; // D:\\data
-	public static String textDir = "text";
+	public String dataDir = "D:\\data"; // D:\\data
+	public String textDir = "text";
 	
 	public DateTime startDateTime;;
 
@@ -131,8 +131,8 @@ public class LocationMapper
 	
 		//load textParser
 		TextParser textParser = new TextParser();
-		textParser.loadText(dataDir);
-		textParser.CreateMasterOut(dataDir);
+		textParser.loadText(textDir);
+		textParser.CreateMasterOut(textDir);
 	
 
 		//build partmap

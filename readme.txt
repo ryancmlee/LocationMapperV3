@@ -10,4 +10,4 @@
 
  	or
 
- java -cp ./LocationMapperV3/libs/joda-time-2.2.jar:./LocationMapperV3/libs/postgresql-9.2-1002.jdbc4.jar:./LocationMapperV3/libs/diewald_shapeFileReader.jar:./LocationMapperV3/src EntryPoint localhost argus3 5432 rails rails LocationMapperV3/data
+ java -cp ./LocationMapperV3/libs/joda-time-2.2.jar:./LocationMapperV3/libs/postgresql-9.2-1002.jdbc4.jar:./LocationMapperV3/libs/diewald_shapeFileReader.jar:./LocationMapperV3/src EntryPoint localhost argus3 5432 rails rails ./../../persistant/data

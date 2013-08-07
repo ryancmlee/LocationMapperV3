@@ -156,13 +156,13 @@ public class PartManager
 		return returnListofLocations;
 	}
 	
-	
-	public void setMatchStrings(Record record)
-	{
-		
-		record.possableLocations = getLocations(record.twitter_user_location);
-		
-	}
+//	
+//	public void setMatchStrings(Record record)
+//	{
+//		
+//		record.possableLocations = getLocations(record.twitter_user_location);
+//		
+//	}
 	
 	
 	

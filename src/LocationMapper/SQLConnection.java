@@ -26,8 +26,8 @@ public class SQLConnection
 	public final String statement = "" +
 	"SELECT id, interaction_geo_latitude, interaction_geo_longitude, twitter_user_location, twitter_user_lang " +
 	"FROM datasift_results " +
-	//"WHERE id > 36100000 " +
-	"WHERE country is null " + 
+	"WHERE id > 36000000 " +
+	//"WHERE country is null " + 
 	"AND (twitter_user_location is not null or interaction_geo_latitude is not null)";  //
 
 	

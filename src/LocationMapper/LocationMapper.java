@@ -21,7 +21,7 @@ public class LocationMapper
 	public static String workDir = "";
 	public static String logDir = "";
 	public String dataDir = "D:\\data"; // D:\\data
-	public String textDir = "LocationMapperV3/text";
+	public String textDir = dataDir + "/text";
 	
 	public DateTime startDateTime;;
 
@@ -144,7 +144,7 @@ public class LocationMapper
 
 		//load LatLongParser
 		latLongParser = new LatLongParser();
-		latLongParser.loadData(dataDir);
+		//latLongParser.loadData(dataDir);
 		
 	
 		
@@ -181,43 +181,26 @@ public class LocationMapper
 	{
 
 		
-		
-		
 		twitter_user_location = TextParser.makeSuperNice(twitter_user_location);	
 		
-	
-		
-//		if(twitter_user_lang.equals("es"))
-//		{
-//			String temp = twitter_user_location;
-//			while(true)
-//			{
-//				twitter_user_location = twitter_user_location.replaceAll( " de | la | me | en | mi | el | del |el " , " ");
-//				
-//				if(temp.equals(twitter_user_location))
-//					break;
-//
-//				 temp = twitter_user_location;
-//			}
-//		}
-	
 		
 
 		Record record = new Record(id, latitude, longitude, twitter_user_location, twitter_user_lang);
 		
-		
+		//set from lat long
 		latLongParser.setPossableLocations(record);
-		partManager.setMatchStrings(record);
-		
+	
+		//set from text
+		record.textData = partManager.getLocations(record.twitter_user_location);
+//		partManager.setMatchStrings(record);
 
 	
 		HashMap<String, Location> cities = new HashMap<String, Location>();
 		HashMap<String, Location>  states = new HashMap<String, Location>();
-		HashMap<String, Location> countires = new HashMap<String, Location>();
+		HashMap<String, Location> countries = new HashMap<String, Location>();
 		
 		
-
-		for (Location loc : record.possableLocations)
+		for (Location loc : record.textData)
 		{
 			if(loc.column == Column.city)
 			{
@@ -229,71 +212,287 @@ public class LocationMapper
 			}
 			else if(loc.column == Column.country)
 			{
-				countires.put(loc.getKey(), loc);
+				countries.put(loc.getKey(), loc);
 			}	
 		}
 		
-		boolean hasES = false;
-		if(record.twitter_user_lang.equals("es"))
+		//cityOnly  by population
+		if (countries.size() == 0 && states.size() == 0 && cities.size() >= 1)		
 		{
-			for ( String string : new ArrayList<String>(cities.keySet()))
+			Location cityOnly = null;
+			for (Location city : cities.values())
 			{
-				if(cities.get(string).countryCode.equals("es"))
-				{
-					hasES = true;
-							break;
-				}
-				
+				if(cityOnly == null)
+					cityOnly = city;
+				else if(cityOnly.population < city.population)
+					cityOnly = city;
 			}
-			
-			if(hasES)
-			{
-				for ( String string : new ArrayList<String>(cities.keySet()))
-				{
-					if(cities.get(string).countryCode.equals("es") == false)
-					{
-						cities.remove(string);
-					}
-					
-				}
-				
-			}
-			else
-			{
-				for ( String string : new ArrayList<String>(states.keySet()))
-				{
-					if(states.get(string).countryCode.equals("es"))
-					{
-						hasES = true;
-								break;
-					}
-					
-				}
-			}
-			
-			if(hasES)
-			{
-				for ( String string : new ArrayList<String>(states.keySet()))
-				{
-					if(states.get(string).countryCode.equals("es") == false)
-					{
-						states.remove(string);
-					}
-					
-				}
-				for ( String string : new ArrayList<String>(countires.keySet()))
-				{
-					if(countires.get(string).countryCode.equals("es") == false)
-					{
-						countires.remove(string);
-					}
-					
-				}
-				
-			}
-			
-			
+			if(cityOnly != null)
+				record.probableLocations.put(Column.city, cityOnly);
 		}
+		
+		//stateOnly  by population
+		if (countries.size() == 0 && states.size() >= 1 && cities.size() == 0)		
+		{
+			Location stateOnly = null;
+			for (Location state : states.values())
+			{
+				if(stateOnly == null)
+					stateOnly = state;
+				else if(stateOnly.population < state.population)
+					stateOnly = state;
+			}
+			if(stateOnly != null)
+				record.probableLocations.put(Column.state_province, stateOnly);
+		}
+		
+		//countryOnly  by US then population
+		if (countries.size() >= 1 && states.size() == 0 && cities.size() == 0)		
+		{
+			Location countryOnly = null;
+			for (Location country : countries.values())
+			{
+				if(countryOnly == null)
+					countryOnly = country;
+				else if(countryOnly.countryCode.equals("us"))
+				{
+					countryOnly = country;
+					break;
+				}
+				else if(countryOnly.population < country.population)
+					countryOnly = country;
+			}
+			if(countryOnly != null)
+				record.probableLocations.put(Column.country, countryOnly);
+		}
+		
+		//city and state  by cityPopulation
+		if (countries.size() == 0 && states.size() >= 1 && cities.size() >= 1)		
+		{
+			Location cityStateCombo = null;
+			for (Location city : cities.values())
+			{
+				Location state = states.get(city.getStateKey());
+				if(state != null)										//have city state combo
+				{
+					if(cityStateCombo == null)
+						cityStateCombo = city;
+					else if(cityStateCombo.population < city.population)
+						cityStateCombo = city;
+				}
+			}
+			if(cityStateCombo != null)
+				record.probableLocations.put(Column.city, cityStateCombo);
+		}
+		
+		
+		//state and County  by statePopulation
+		if (countries.size() >= 1 && states.size() >= 1 && cities.size() == 0)		
+		{
+			Location stateCountyCombo = null;
+			for (Location state : states.values())
+			{
+				Location country = countries.get(state.getCountryKey());
+				if(country != null)										//have stateCountry Combo
+				{
+					if(stateCountyCombo == null)
+						stateCountyCombo = state;
+					else if(stateCountyCombo.population < state.population)
+						stateCountyCombo = state;
+				}
+			}
+			if(stateCountyCombo != null)
+				record.probableLocations.put(Column.state_province, stateCountyCombo);
+		}
+		
+		
+		
+		//cityCountry  by cityPopulation
+		if (countries.size() >= 1 && states.size() == 0 && cities.size() >= 1)		
+		{
+			Location cityCountryCombo = null;
+			for (Location city : cities.values())
+			{
+				Location country = countries.get(city.getCountryKey());
+				if(country != null)										//have city state combo
+				{
+					if(cityCountryCombo == null)
+						cityCountryCombo = city;
+					else if(cityCountryCombo.population < city.population)
+						cityCountryCombo = city;
+				}
+			}
+			if(cityCountryCombo != null)
+				record.probableLocations.put(Column.city, cityCountryCombo);
+		}
+		
+		
+		//all  by cityPopulation
+		if (countries.size() >= 1 && states.size() >= 1 && cities.size() >= 1)		
+		{
+			Location allCombo = null;
+			for (Location city : cities.values())
+			{
+				Location state = states.get(city.getStateKey());
+				Location country = countries.get(city.getCountryKey());
+				if(state != null && country != null)										//have city state combo
+				{
+					if(allCombo == null)
+						allCombo = city;
+					else if(allCombo.population < city.population)
+						allCombo = city;
+				}
+			}
+			if(allCombo != null)
+				record.probableLocations.put(Column.state_province, allCombo);
+		}
+		
+		
+//				
+//		
+//		for(Location country : countries.values())					//for each country
+//		{
+//			for (Location state : states.values())					//states in country
+//			{
+//				if(country.getKey() == state.getCountryKey())
+//				{
+//					country.states.put(state.getKey(), state);
+//				}
+//			}
+//			
+//			for (Location city : cities.values())
+//			{
+//				if(country.getKey() == city.getCountryKey())		//city in country
+//				{
+//					country.cities.put(city.getKey(), city);
+//				}
+//			}
+//			
+//			
+//			
+//			
+//			
+//		}
+//		
+//		
+//		
+//		
+//		
+//		if(countries.size() >= 0)			//yes country
+//		{
+//			
+//			for (Location state : states.values())
+//			{
+//				String countryCode = state.getCountryKey();
+//				Location country = countries.get(countryCode);
+//				
+//				if(country != null)								//merge countries and states
+//				{
+//					country.states.put(state.getKey(), state);
+//					state.countires.put(countryCode, country);
+//				}
+//			}
+//			
+//			
+//			
+//		}
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		for (Location city : cities.values())
+//		{
+//			Location state = states.get(city.getStateKey());
+//			if(state != null)
+//			{
+//				city.states.put(state.getKey(), state);
+//				state.cities.put(city.getKey(), city);
+//			}
+//			
+//			Location country = countries.get(city.getCountryKey());
+//			if(country != null)
+//			{
+//				city.states.put(country.getKey(), country);
+//				country.cities.put(city.getKey(), city);
+//			}
+//			
+//		}
+////		
+//		for (Location state : states.values())
+//		{
+//			Location state = states.get(city.getStateKey());
+//			if(state != null)
+//			{
+//				city.states.put(state.getKey(), state);
+//				state.cities.put(city.getKey(), city);
+//			}
+//		}
+//		
+		
+		
+		
+		
+		
+//		boolean hasES = false;
+//		if(record.twitter_user_lang.equals("es"))
+//		{
+//			for ( String string : new ArrayList<String>(cities.keySet()))
+//			{
+//				if(cities.get(string).countryCode.equals("es"))
+//				{
+//					hasES = true;
+//					break;
+//				}
+//			}
+//			
+//			if(hasES)
+//			{
+//				for ( String string : new ArrayList<String>(cities.keySet()))
+//				{
+//					if(cities.get(string).countryCode.equals("es") == false)
+//					{
+//						cities.remove(string);
+//					}
+//				}
+//			}
+//			else
+//			{
+//				for ( String string : new ArrayList<String>(states.keySet()))
+//				{
+//					if(states.get(string).countryCode.equals("es"))
+//					{
+//						hasES = true;
+//						break;
+//					}
+//				}
+//			}
+//			
+//			if(hasES)
+//			{
+//				for ( String string : new ArrayList<String>(states.keySet()))
+//				{
+//					if(states.get(string).countryCode.equals("es") == false)
+//					{
+//						states.remove(string);
+//					}
+//				}
+//				for ( String string : new ArrayList<String>(countires.keySet()))
+//				{
+//					if(countires.get(string).countryCode.equals("es") == false)
+//					{
+//						countires.remove(string);
+//					}
+//				}
+//			}
+//		}
+		
+		
+		
+		
 		
 //		long pop = -1;
 //		Location highestPop = null;
@@ -338,52 +537,54 @@ public class LocationMapper
 //		}
 //		
 
-		long pop = -1;
-		Location highestPop = null;
-		for (Location loc : cities.values())
-		{
-			if(loc.population > pop)
-			{
-				highestPop = loc;
-				pop = loc.population;
-			}
-			
-//			if(loc.getCountryKey().equals("US._._") )
-//				record.textData.put(Column.city, loc);
-		}
-		if(highestPop != null)
-			record.textData.put(Column.city, highestPop);
 		
-		
-		pop = -1;
-		highestPop = null;
-		for (Location loc : states.values())
-		{
-			if(loc.population > pop)
-			{
-				highestPop = loc;
-				pop = loc.population;
-			}
-			
-//			if(loc.getCountryKey().equals("us._._") )
-//				record.textData.put(Column.city, loc);
-		}
-		if(highestPop != null)
-			record.textData.put(Column.state_province, highestPop);
-		
-		pop = -1;
-		highestPop = null;
-		for (Location loc : countires.values())
-		{
-			if(loc.population > pop)
-			{
-				highestPop = loc;
-				pop = loc.population;
-			}
-		}
-		if(highestPop != null)
-			record.textData.put(Column.country, highestPop);
-		
+//		
+//		long pop = -1;
+//		Location highestPop = null;
+//		for (Location loc : cities.values())
+//		{
+//			if(loc.population > pop)
+//			{
+//				highestPop = loc;
+//				pop = loc.population;
+//			}
+//			
+////			if(loc.getCountryKey().equals("US._._") )
+////				record.textData.put(Column.city, loc);
+//		}
+//		if(highestPop != null)
+//			record.textData.put(Column.city, highestPop);
+//		
+//		
+//		pop = -1;
+//		highestPop = null;
+//		for (Location loc : states.values())
+//		{
+//			if(loc.population > pop)
+//			{
+//				highestPop = loc;
+//				pop = loc.population;
+//			}
+//			
+////			if(loc.getCountryKey().equals("us._._") )
+////				record.textData.put(Column.city, loc);
+//		}
+//		if(highestPop != null)
+//			record.textData.put(Column.state_province, highestPop);
+//		
+//		pop = -1;
+//		highestPop = null;
+//		for (Location loc : countires.values())
+//		{
+//			if(loc.population > pop)
+//			{
+//				highestPop = loc;
+//				pop = loc.population;
+//			}
+//		}
+//		if(highestPop != null)
+//			record.textData.put(Column.country, highestPop);
+//		
 		
 		
 		

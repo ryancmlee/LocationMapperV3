@@ -23,8 +23,8 @@ public class LatLongParser
 		Area area = world;
 		
 		while((area = area.getFirstAreaWithin(record.longitude, record.latitude)) != null)
-			if(record.locData.containsKey(area.column) == false)
-				record.locData.put(area.column, area.officialName);
+			if(record.latLongData.containsKey(area.column) == false)
+				record.latLongData.put(area.column, area.officialName);
 		
 		
 	}

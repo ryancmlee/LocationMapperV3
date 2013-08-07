@@ -350,7 +350,7 @@ public class TextParser
 		
 		
 		
-		tempFileLoc = textDir + "/raw/cities1000.txt";
+		tempFileLoc = textDir + "/raw/cities15000.txt";
 		Log.log(Log.tab + "Loading " + tempFileLoc);
 		for(String string : LoadTextFile(tempFileLoc, null, false))
 		{
@@ -367,8 +367,8 @@ public class TextParser
 			String featureCode        = (strings[7]);		// see http://www.geonames.org/export/codes.html, varchar(10)
 			String countryCode     	= (strings[8]);		// ISO-3166 2-letter country code, 2 characters
 			String cc3     			= (strings[9]);		// alternate country codes, comma separated, ISO-3166 2-letter country code, 60 characters
-			String admin1     		= (strings[10]);		// fipscode (subject to change to iso code), see exceptions below, see file admin1Codes.txt for display names of this code; varchar(20)
-			String admin2     		= (strings[11]);		// code for the second administrative division, a county in the US, see file admin2Codes.txt; varchar(80) 	
+			String state     		= (strings[10]);		// fipscode (subject to change to iso code), see exceptions below, see file admin1Codes.txt for display names of this code; varchar(20)
+			String county     		= (strings[11]);		// code for the second administrative division, a county in the US, see file admin2Codes.txt; varchar(80) 	
 			String admin3      		= (strings[12]);		// code for third level administrative division, varchar(20)
 			String admin4      		= (strings[13]);		// code for fourth level administrative division, varchar(20)
 			String populationString   = (strings[14]);		// bigint (8 byte int) 
@@ -393,43 +393,8 @@ public class TextParser
 			
 			
 			
-			Location loc = new Location(asciiname, countryCode, admin1, asciiname, population, "_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+			Location loc = new Location(asciiname, countryCode, state, asciiname, county, population, "_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
 			this.addLoc(loc);
-			
-			
-//			//set Specifics
-//			if(admin1.equals(""))
-//			{
-//				Log.log("admin1 is blank for " + string);
-//			}
-//			else if(admin1.equals("ENG"))
-//			{
-//				admin1 = "EN";
-//			}
-//			
-//				
-//
-//			String countryDOTstateCODE = countryCode + "." + admin1;
-//			
-//			
-//			String stateISO = this.getISOfromFIPS(countryDOTstateCODE);
-//			
-//			
-//			if(stateISO == null)
-//			{
-//				
-//				Log.log("if(FIPStoNameMap.containsKey(admin1) == false)  " + countryDOTstateCODE + "||" + y++);
-//			}
-//			else
-//			{
-//				t++;
-//				
-//				
-//				Location loc = new Location(asciiname, stateISO, asciiname, population, "_lvl_", Column.city, matchNames);  //public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
-//				this.addToAllLoc(loc);
-//			}
-			
-			
 			
 		}
 		
@@ -456,7 +421,7 @@ public class TextParser
 					
 					
 					
-					Location newState = new Location(strings[1], strings[0], strings[1], "_", 0, "_", Column.state_province, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+					Location newState = new Location(strings[1], strings[0], strings[1], "_", "_", 0, "_", Column.state_province, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
 					this.addLoc(newState);
 				}
 				
@@ -482,7 +447,7 @@ public class TextParser
 						
 						
 						
-						Location newCountry = new Location(strings[0], strings[0], "_", "_", 0, "_", Column.country, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+						Location newCountry = new Location(strings[0], strings[0], "_", "_", "_", 0, "_", Column.country, matchNames);  //(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
 						this.addLoc(newCountry);
 					}
 				}
@@ -695,6 +660,8 @@ public class TextParser
 			return false;
 		}
 
+		
+		
 
 		String key = null;
 		

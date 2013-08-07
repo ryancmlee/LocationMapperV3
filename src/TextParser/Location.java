@@ -1,6 +1,7 @@
 package TextParser;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import LatLongParser.Column;
@@ -13,7 +14,7 @@ public class Location
 	public String countryCode = "";
 	public String stateCode = "";
 	public String cityCode = "";
-
+	public String county = "";
 	
 	public long population = 0;
 
@@ -26,15 +27,19 @@ public class Location
 	public String level = null;
 	
 	
+	//for ProcessAndUpdate
+	public HashMap<String, Location> cities = new HashMap<String, Location>();
+	public HashMap<String, Location>  states = new HashMap<String, Location>();
+	public HashMap<String, Location> countires = new HashMap<String, Location>();
 	
 	
-	
-	private void doConstruction(String country, String state, String city, String outName, long population, Column column, String level, HashSet<String> matchNames)
+	private void doConstruction(String country, String state, String city, String county, String outName, long population, Column column, String level, HashSet<String> matchNames)
 	{		
 		this.outName = TextParser.makeSuperNice(outName);
 		this.countryCode = TextParser.makeSuperNice(country);
 		this.stateCode = TextParser.makeSuperNice(state);
 		this.cityCode =  TextParser.makeSuperNice(city);
+		this.county = county;
 		this.population = population;
 		this.column = column;
 		this.level = level;
@@ -64,9 +69,9 @@ public class Location
 //		doConstruction(strings[0], strings[1], city, outName, population, column, level, matchNames);
 //	}
 //	
-	public Location(String outName, String country, String state, String city, long population, String level, Column column,HashSet<String> matchNames)
+	public Location(String outName, String country, String state, String city, String county, long population, String level, Column column, HashSet<String> matchNames)
 	{
-		doConstruction(country, state, city, outName, population, column, level, matchNames);
+		doConstruction(country, state, city, county, outName, population, column, level, matchNames);
 	}
 //	public Location(String outName, String country, String state, String city, long population, Column column, String level, String otherName)
 //	{
@@ -80,6 +85,9 @@ public class Location
 //		doConstruction(country, state, city, outName, population, column, level, null);
 //	}
 //
+	
+	
+	//for keyAdd
 	public Location(String string) throws Exception
 	{
 			
@@ -118,7 +126,7 @@ public class Location
 			}
 				
 		
-			doConstruction(countryCode, stateCode, cityCode, outName, population, column, level, matchNames);
+			doConstruction(countryCode, stateCode, cityCode, outName, "_", population, column, level, matchNames);
 	}
 	
 	public String getKey()
